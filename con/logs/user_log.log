@@ -1,0 +1,33 @@
+2022-08-15T17:33:44.963021+0400, DEBUG, User [1259401295] is exist in db
+2022-08-15T17:33:44.963222+0400, DEBUG, User [1259401295] is start transaction
+2022-08-15T17:33:46.698117+0400, DEBUG, Insert transaction cryptocoin=btc, user_id=1259401295.
+2022-08-15T17:33:46.698575+0400, DEBUG, User 1259401295 click btc
+2022-08-15T17:33:47.737093+0400, DEBUG, User id [1259401295] | Update the table transaction_exchanges {'type_transaction': 'Buy'}
+2022-08-15T17:33:48.960494+0400, DEBUG, User id [1259401295] | Update the table transaction_exchanges {'amount_user': 0, 'state_transaction': 'run', 'curacy': 'USD'}
+2022-08-15T17:33:53.617145+0400, DEBUG, User id [1259401295] | Update the table transaction_exchanges {'amount_user': 100000.0, 'amount_crypto': 4.139239034, 'amd_amount_pr': 44611777.03, 'state_transaction': 'waiting_user_wallet'}
+2022-08-15T17:57:29.781237+0400, DEBUG, Add the now user in telegram_users table, Insert the value id=269437833, user_name=Gazilius
+2022-08-15T17:57:29.781237+0400, DEBUG, Add the now user in telegram_users table, Insert the value id=269437833, user_name=Gazilius
+2022-08-15T17:57:29.788005+0400, DEBUG, User [269437833] is start transaction
+2022-08-15T17:57:29.788005+0400, DEBUG, User [269437833] is start transaction
+2022-08-15T17:57:38.267671+0400, DEBUG, Insert transaction cryptocoin=dash, user_id=269437833.
+2022-08-15T17:57:38.267671+0400, DEBUG, Insert transaction cryptocoin=dash, user_id=269437833.
+2022-08-15T17:57:38.268142+0400, DEBUG, User 269437833 click dash
+2022-08-15T17:57:38.268142+0400, DEBUG, User 269437833 click dash
+2022-08-15T17:57:43.033252+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'type_transaction': 'Buy'}
+2022-08-15T17:57:43.033252+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'type_transaction': 'Buy'}
+2022-08-15T17:58:04.190336+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'amount_user': 0, 'state_transaction': 'run', 'curacy': 'AMD'}
+2022-08-15T17:58:04.190336+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'amount_user': 0, 'state_transaction': 'run', 'curacy': 'AMD'}
+2022-08-15T17:58:12.790853+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'amount_user': 24000.0, 'amount_crypto': 1.048966178, 'amd_amount_pr': 25200.0, 'state_transaction': 'waiting_user_wallet'}
+2022-08-15T17:58:12.790853+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'amount_user': 24000.0, 'amount_crypto': 1.048966178, 'amd_amount_pr': 25200.0, 'state_transaction': 'waiting_user_wallet'}
+2022-08-15T17:58:20.793776+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'armenian_wallet': 'Idram'}
+2022-08-15T17:58:20.793776+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'armenian_wallet': 'Idram'}
+2022-08-15T17:58:20.801027+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'state_transaction': 'waiting_user_photo'}
+2022-08-15T17:58:20.801027+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'state_transaction': 'waiting_user_photo'}
+2022-08-15T17:58:58.498373+0400, DEBUG, User id [269437833] | Update the table transaction_photo {'client_check_image_id': 'AgACAgIAAxkBAAImAmL6USEkz2F6IFbGXoDWfjE_Ef4pAAJzvjEbyMPQS-B60Sq4V1G-AQADAgADbQADKQQ'}
+2022-08-15T17:58:58.498373+0400, DEBUG, User id [269437833] | Update the table transaction_photo {'client_check_image_id': 'AgACAgIAAxkBAAImAmL6USEkz2F6IFbGXoDWfjE_Ef4pAAJzvjEbyMPQS-B60Sq4V1G-AQADAgADbQADKQQ'}
+2022-08-15T17:58:58.505280+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'state_transaction': 'waiting_cofirm_admin'}
+2022-08-15T17:58:58.505280+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'state_transaction': 'waiting_cofirm_admin'}
+2022-08-15T17:59:08.621351+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'state_transaction': 'waiting_user_wallet_number'}
+2022-08-15T17:59:08.621351+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'state_transaction': 'waiting_user_wallet_number'}
+2022-08-15T17:59:54.839136+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'user_wallet': 'Appuushban', 'state_transaction': 'waiting_service_check_number'}
+2022-08-15T17:59:54.839136+0400, DEBUG, User id [269437833] | Update the table transaction_exchanges {'user_wallet': 'Appuushban', 'state_transaction': 'waiting_service_check_number'}

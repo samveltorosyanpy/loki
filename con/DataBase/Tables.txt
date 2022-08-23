@@ -1,0 +1,38 @@
+CREATE TABLE "telegram_user"
+(
+    "id"       TEXT NOT NULL,
+    "username" TEXT NOT NULL
+);
+
+CREATE TABLE "transaction_exchange"
+(
+    "id"                INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    "count"             TEXT    NOT NULL,
+    "curacy"            TEXT    NOT NULL,
+    "count_cripto"      TEXT    NOT NULL,
+    "cryptocoin"        TEXT    NOT NULL,
+    "type_transaction"  TEXT    NOT NULL,
+    "user_wallet"       TEXT    NOT NULL,
+    "armenian_wallet"   TEXT    NOT NULL,
+    "state_transaction" TEXT    NOT NULL,
+    "datetime"          TEXT    NOT NULL,
+    "user_id"           INTEGER NOT NULL,
+
+    FOREIGN KEY ("user_id"
+        ) REFERENCES "telegram_user" ("id")
+);
+
+CREATE TABLE transaction_photo
+(
+    "id"                     INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    "client_check_image_id"  TEXT    NOT NULL,
+    "service_check_image_id" TEXT    NOT NULL,
+    transaction_id           INTEGER NOT NULL,
+    FOREIGN KEY ("transaction_id") REFERENCES transaction_exchange ("id")
+);
+
+
+
+DROP TABLE telegram_user;
+DROP TABLE transaction_exchange;
+DROP TABLE transaction_photo;
