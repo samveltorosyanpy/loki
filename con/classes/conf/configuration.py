@@ -4,7 +4,7 @@ import os
 PATH = os.path.dirname(__file__)[:-17]
 TOKEN = '5728675320:AAEnXeGckEN2yGpyI_XzDPhpVo-pLeqy9KQ'
 
-APP_URL = f"https://mybotchanger.herokuapp.com/{TOKEN}"
+APP_URL = f"https://lokichangebot.herokuapp.com/{TOKEN}"
 
 limit_time_send_photo = 20 # minutes
 
