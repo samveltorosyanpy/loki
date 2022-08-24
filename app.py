@@ -54,6 +54,10 @@ def start_bot(bot):
                              reply_markup=markup_language)
             logger.debug(F"""User [{message.chat.id}] poxec ir ogtagorcman lezun""")
 
+        if message.text == "/admin":
+            bot.send_message(message.chat.id, text="""
+            barev, du mutq es gorcel boti admin hartak vortex karox es boti het kapvac kargavorumner anel""")
+
     @bot.callback_query_handler(func=lambda call: True)
     def query_handler(call):
         if call.data == "btc" or call.data == "dash" or call.data == "ltc" or call.data == "xrp":
@@ -166,9 +170,12 @@ def start_bot(bot):
     """, )
 
                 markup_manually = types.InlineKeyboardMarkup(row_width=1)
-                manual = types.InlineKeyboardButton(text=SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][19], callback_data="manually")
+                manual = types.InlineKeyboardButton(text=SENTENCE_BOT[
+                    Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][19],
+                                                    callback_data="manually")
                 markup_manually.add(manual)
-                bot.send_message(call.message.chat.id, text="ete chuneq ktron apa sexmeq lracnel knopken", reply_markup=markup_manually)
+                bot.send_message(call.message.chat.id, text="ete chuneq ktron apa sexmeq lracnel knopken",
+                                 reply_markup=markup_manually)
 
                 send_user_chack = DownloadFiles()
                 send_user_chack.Photo_Download(bot)
@@ -222,7 +229,8 @@ def start_bot(bot):
 
         elif call.data == "manually":
             Transaction.ValueUpdate(value={"state_transaction": 'waiting_manual_time'}, id=call.message.chat.id)
-            bot.send_message(call.message.chat.id, text="kxndrem grel motavor jam@ qnisin e katarvel poxancum@ partadir ays formatov '20:00-20:30'")
+            bot.send_message(call.message.chat.id,
+                             text="kxndrem grel motavor jam@ qnisin e katarvel poxancum@ partadir ays formatov '20:00-20:30'")
             ClassMCH = Churancy_chack()
             ClassMCH.CurChack(bot)
 
@@ -257,13 +265,13 @@ def start_bot(bot):
 """)
 
 
-
-@server.route('/' + TOKEN, methods=['POST'])
+@server.route('/' + str(TOKEN), methods=['POST'])
 def get_message():
     json_string = request.get_data().decode('utf-8')
     update = telebot.types.Update.de_json(json_string)
     bot.process_new_updates([update])
     return '!', 200
+
 
 @server.route('/')
 def webhook():
@@ -271,15 +279,29 @@ def webhook():
     bot.set_webhook(url=APP_URL)
     return '!', 200
 
+
 if __name__ == '__main__':
     start_bot(bot)
+    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
     bot.set_my_commands([
         telebot.types.BotCommand("/start", "start the bot"),
         telebot.types.BotCommand("/language", "choose a language"),
         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
     ])
-    # bot.polling()
-    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+# 30 rope heto chek@ atmena lini
+# logeri garc@ lucel json faili ognutyamb
+# texteri het xnirner@ lucel
+# maximal gumar@ grelu qanak@ sahmanel ev data sarqel
+# env fail@ havaqel
+# admin panel@
+# informacian poxelu hnaravorutyun
+# sarqel database vortex grvum e informacia vor@ etaka klini popoxutyan boti ognutyamb
+# botum avelacnel admin funkcian
+# usernerin startus talu hnaravorutyun
+# interfaceum tal hnaravorutyun user id-ov poxel useri status@
+
+
 # if __name__ == '__main__':
 #     bot = telebot.TeleBot(TOKEN)
 #     start_bot(bot)
@@ -289,8 +311,3 @@ if __name__ == '__main__':
 #         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
 #     ])
 #     bot.polling(none_stop=True, interval=0)
-
-# 30 rope heto chek@ atmena lini
-# logeri garc@ lucel json faili ognutyamb
-# texteri het xnirner@ lucel
-# webhook miacnel poolingi tex@

@@ -1,4 +1,3 @@
-import asyncio
 import telebot
 import schedule
 from time import sleep
