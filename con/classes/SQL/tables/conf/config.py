@@ -9,8 +9,8 @@ load_dotenv()
 
 Base = declarative_base()
 
-SQLALCHEMY_DATABASE_URI = f"postgres://{os.environ['NAME']}:{os.environ['PASSWORD']}@{os.environ['HOST']}:{os.environ['PORT']}/{os.environ['DATABASE']}"
-
+# SQLALCHEMY_DATABASE_URI = f"postgres://{os.environ['NAME']}:{os.environ['PASSWORD']}@{os.environ['HOST']}:{os.environ['PORT']}/{os.environ['DATABASE']}"
+SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
     SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
 
