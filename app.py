@@ -281,13 +281,16 @@ def webhook():
 
 
 if __name__ == '__main__':
-    start_bot(bot)
-    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
     # bot.set_my_commands([
     #     telebot.types.BotCommand("/start", "start the bot"),
     #     telebot.types.BotCommand("/language", "choose a language"),
     #     telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
     # ])
+    start_bot(bot)
+    server.debug = True
+    server.config.update(PROPAGATE_EXCEPTIONS=True)
+    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 # 30 rope heto chek@ atmena lini
 # logeri garc@ lucel json faili ognutyamb

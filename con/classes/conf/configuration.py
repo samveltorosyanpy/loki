@@ -1,7 +1,7 @@
 from con.classes.SQL.StartingPostgres import *
 import os
 
-TOKEN = print(os.environ['TOKEN'])
+TOKEN = os.environ['TOKEN']
 
 APP_URL = f"https://lokichangebot.herokuapp.com/{TOKEN}"
 
