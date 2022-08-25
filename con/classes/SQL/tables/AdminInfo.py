@@ -11,7 +11,6 @@ class ChangeInformation(Base):
   limit_time_send_photo = Column(Integer, nullable=False)
   commission = Column(Integer, nullable=False)
   amd_price = Column(Integer, nullable=False)
-  token = Column(String(250), nullable=False)
   owner_id = Column(Integer, nullable=False)
 
   min_limits_amount_exchange_amd = Column(String(250), nullable=False)
