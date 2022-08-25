@@ -1,7 +1,7 @@
 from con.classes.SQL.StartingPostgres import *
 import os
 
-TOKEN = Sessions.query(ChangeInformation.token).filter(ChangeInformation.id == 1)
+TOKEN = print(os.environ['TOKEN'])
 
 APP_URL = f"https://lokichangebot.herokuapp.com/{TOKEN}"
 
