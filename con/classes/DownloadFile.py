@@ -41,7 +41,7 @@ class DownloadFiles():
                 markup_send_for_user_photo.add(type_cour1, type_cour2)
 
                 bot.send_message(random_admin_id, text="""
-                        ete chek@ liovin stugvac e sexmeq cofime ev uxarkeq blockchain hxom@.
+                        ete chek@ liovin stugvac e sexmeq cofirme ev uxarkeq blockchain hxom@.
                         """)
                 photo = open(src, 'rb')
                 bot.send_photo(random_admin_id, photo, reply_markup=markup_send_for_user_photo)

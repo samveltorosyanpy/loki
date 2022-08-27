@@ -50,7 +50,7 @@ class Churancy_chack():
                 if amount_user == 0 and state_transaction == "waiting_user_amount":
                     while message.text.isnumeric():
                         amount_exchange = int(message.text)
-                        while amount_exchange >= limits_amount_exchange[curacy]:
+                        while amount_exchange >= min_limits_amount_exchange[curacy]:
 
                             amount_user = message.text
 
@@ -100,7 +100,7 @@ class Churancy_chack():
 
                         else:
                             bot.send_message(message.chat.id,
-                                             f"{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][13]} {limits_amount_exchange[curacy]}")
+                                             f"{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][13]} {min_limits_amount_exchange[curacy]}")
 
                             break
 
@@ -159,7 +159,7 @@ class Churancy_chack():
 
                         amount_exchange = int(message.text)
 
-                        while amount_exchange >= limits_amount_exchange[curacy]:
+                        while amount_exchange >= min_limits_amount_exchange[curacy]:
                             TransactionPhoto().InsertTransactionPhoto(value={"client_check_image_id": None}, user_id=message.chat.id)
                             TransactionIsNotPhoto().ValueUpdate(value={"amount": message.text}, id=message.chat.id)
 
@@ -193,7 +193,7 @@ class Churancy_chack():
                         else:
 
                             bot.send_message(message.chat.id,
-                                             f"{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][13]} {limits_amount_exchange[curacy]}")
+                                             f"{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][13]} {min_limits_amount_exchange[curacy]}")
 
                             break
 

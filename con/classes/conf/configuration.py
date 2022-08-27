@@ -1,9 +1,9 @@
 from con.classes.SQL.StartingPostgres import *
 import os
 
-TOKEN = os.environ['TOKEN']
-
-APP_URL = f"https://lokichangebot.herokuapp.com/{TOKEN}"
+# TOKEN = os.environ['TOKEN']
+TOKEN = "5309521467:AAEDLFgC-3J6GpcD4ImA2ZyEMvtKLCYcoRs"
+# APP_URL = f"https://lokichangebot.herokuapp.com/{TOKEN}"
 
 limit_time_send_photo = Sessions.query(ChangeInformation.limit_time_send_photo).filter(
     ChangeInformation.id == 1)[0][0]  # minutes
@@ -11,8 +11,12 @@ limit_time_send_photo = Sessions.query(ChangeInformation.limit_time_send_photo).
 
 PATH = os.path.dirname(__file__)[:-17]
 
+
 commission = Sessions.query(ChangeInformation.commission).filter(
     ChangeInformation.id == 1)[0]  # %
+
+
+owner_id = Sessions.query(ChangeInformation.owner_id).filter(ChangeInformation.id == 1)[0][0]
 
 
 arm_price = Sessions.query(ChangeInformation.amd_price).filter(ChangeInformation.id == 1)[0][0]
@@ -73,7 +77,7 @@ SENTENCE_BOT = {
          "Ուշադրություն, գինը կարող է փոքր ինչ տարբերություն տալ շուկայականից"],
         # 8.1, 8.2
         "Գրեք գումարի ցանկալի քանակը փոխանցման համար",  # 9
-        ["Փոխանցեք գումարը այդ հաշիվներից մեկին և ուղարկեք կտրոն",
+        ["Փոխանցեք գումարը հաշիվներն և ուղարկեք կտրոն",
          "Կտրոնի բացակայության դեպքում մենք հետևանքների համար պատասխանատվություն չենք կրում", "Գումարը Կրիպտոարժույթով",
          "Մեր հաշվեհամարը", "Գումարի քանակը"],
         # 10.1, 10.2, 10.3, 10.4
@@ -86,6 +90,14 @@ SENTENCE_BOT = {
         "Լեզուն փոխվել է, սեղմեք /start",  # 17
         "💥 գործարքը կանգնեցված է նշված ընթացքում կտրոնը չուղարկելու պատճառով:",  # 18
         "Լրացնել ձեռքով"  # 19
+
+        "Ուղարկեք ավելի հստակ նկար",
+        "Գրեք գործարքի մոտավոր ժամանակը հետևյալ ձևով '20:00-20:30'",
+        "Գրեք ուղարկված գումարի չափը",
+        "Կխնդրենք հետևել տվյած ձևին '20:00-20:30'",
+        "Օգտատերը չունի չեկ, կխնդրեմ ստուգել դրա առկայությունը տրված ժամով և գումարի քանակով",
+        "Եթե չունեք չեկ, սեղմեք Լրացնել ձեռքով կոճակը",
+        "Եթե չեկը լիովին ստուգված է, սեղմեք Confirm և ուղարկեք բլոկչեյնի հղումը",
     ],
 
     "russian": [
@@ -110,12 +122,20 @@ SENTENCE_BOT = {
         "Ваш купон отклонен, пожалуйста, отправьте его еще раз или свяжитесь с оператором @cuturie.",
         "Язык изменен, нажмите /start",
         "💥 сделка отменена по причине истечении времени ожидания отправки купона",
-        "Введите вручную"
+        "Введите вручную",
+
+        "Отпраьте более четкую фотографию",
+        "Запишите примерное время совершения транзакции в данном формате '20:00-20:30'",
+        "Запишите переведенную сумму",
+        "Придерживайтесь указанного формата '20:00-20:30'",
+        "У пользователя нету чека, прошу проверить наличие чека с указанным временем и суммой",
+        "Если у вас нету чека, то нажмите на кнопку 'Введите вручную'",
+        "Если чек полностью проверен, нажмите 'Confirm' и отправьте ссылку блокчейна",
     ],
 
     "english": [
-        "Select cryptocurrency 🏦",
-        "📊 cryptocurrency prices",
+        "Select cryptocurrency 🏦", #+
+        "📊 cryptocurrency prices", #+
         "🏴‍☠ choose a language for the bot",
         "Choose your currency",
         "Press /start to start again",
@@ -136,6 +156,14 @@ SENTENCE_BOT = {
         "Your coupon is rejected, please send again or contact the operator @cuturie",
         "The language has been changed, press /start",
         "💥 the transaction is suspended due to ending of the specified time of sending the invoice",
-        "Enter manually"
+        "Enter manually",
+
+        "Send more accurate image",
+        "Write the approximate time of transaction in this form '20:00-20:30'",
+        "Write the sent amount",
+        "Please, follow the form '20:00-20:30'",
+        "User doesn't have the invoice, please check the presence of it by this date and amount",
+        "If you don't have the invoice, press the 'Enter manually' button",
+        "If the invoice is fully checked, press 'Confirm' and send blockchain link",
     ]
 }

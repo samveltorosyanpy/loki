@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 from loguru import logger
 from datetime import datetime
-from flask import Flask, request
+# from flask import Flask, request
 from con.classes.conf.configuration import *
 from con.classes.SQL.StartingPostgres import *
 from con.classes.ApiRequests import ClassApis
@@ -10,7 +10,7 @@ from con.classes.DownloadFile import DownloadFiles
 from con.classes.CuracyChack import Churancy_chack
 
 bot = telebot.TeleBot(TOKEN)
-server = Flask(__name__)
+# server = Flask(__name__)
 
 
 def start_bot(bot):
@@ -39,7 +39,7 @@ def start_bot(bot):
                                                     callback_data='ShowPrice')
             markup.add(type_cour1, type_cour2, type_cour3, type_cour4, type_cour5)
             bot.send_message(message.chat.id, text=
-            SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][0],
+            Translate().ShowText(message.chat.id, 1),
                              reply_markup=markup)
 
         if message.text == "/language":
@@ -49,12 +49,10 @@ def start_bot(bot):
             type_language3 = types.InlineKeyboardButton(text='🇬🇧 English', callback_data='english_language')
 
             markup_language.add(type_language1, type_language2, type_language3)
-            bot.send_message(message.chat.id, text=
-            SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][2],
+            bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 3),
                              reply_markup=markup_language)
-            logger.debug(F"""User [{message.chat.id}] poxec ir ogtagorcman lezun""")
 
-        if message.text == "/admin":
+        if message.text == "/admin" and message.chat.id == owner_id:
             bot.send_message(message.chat.id, text="""
             barev, du mutq es gorcel boti admin hartak vortex karox es boti het kapvac kargavorumner anel""")
 
@@ -62,38 +60,29 @@ def start_bot(bot):
     def query_handler(call):
         if call.data == "btc" or call.data == "dash" or call.data == "ltc" or call.data == "xrp":
             Transaction.InsertTransactionPending(cryptocoin=call.data, user_id=call.message.chat.id)
-
             cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
                 TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
 
             markup_buy_sell = types.InlineKeyboardMarkup(row_width=2)
-            type_buy = types.InlineKeyboardButton(text=str(SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(
-                TelegramUser.id == call.message.chat.id)[0][0]][5]),
-                                                  callback_data=f"Buy {cryptocoin}")
-            type_sell = types.InlineKeyboardButton(text=str(SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(
-                TelegramUser.id == call.message.chat.id)[0][0]][6]),
-                                                   callback_data=f"Sell {cryptocoin}")
+            type_buy = types.InlineKeyboardButton(text=Translate().ShowText(call.message.chat.id, 6), callback_data=f"Buy {cryptocoin}") #
+            type_sell = types.InlineKeyboardButton(text=Translate().ShowText(call.message.chat.id, 7), callback_data=f"Sell {cryptocoin}") #
             markup_buy_sell.add(type_buy, type_sell)
-            bot.send_message(call.message.chat.id, text=
-            SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][
-                7],
-                             reply_markup=markup_buy_sell)
-            logger.debug(f"""Insert transaction cryptocoin={call.data}, user_id={call.message.chat.id}.""")
-            logger.debug(f"User {call.message.chat.id} click {str(call.data)}")
+            bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 8),reply_markup=markup_buy_sell) #
+
 
         elif call.data == "ShowPrice":
             cryptocoin_array = ['BTC', 'XRP', 'LTC', 'DASH']
             AllPrice = ClassApis(cryptocoin_array)
             all_price = AllPrice.all_crypto_price()
             bot.reply_to(call.message, text=f"""
-{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][8][0]}
+{Translate().ShowText(call.message.chat.id, 9)}
 
 ✅  BTC/USD    {all_price[0]}
 ✅  XRP/USD    {all_price[1]}
 ✅  LTC/USD    {all_price[2]}
 ✅  DASH/USD   {all_price[3]}
 
-{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][8][1]}""")
+{Translate().ShowText(call.message.chat.id, 10)}""")
             logger.debug(
                 f"""user {call.message.chat.id} click the ShowPrice"""
             )
@@ -139,7 +128,6 @@ def start_bot(bot):
             ClassMCH = Churancy_chack()
             ClassMCH.CurChack(bot)
 
-
         elif call.data == "Idram" or call.data == "Telcell" or call.data == "Easypay":
 
             type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
@@ -159,20 +147,21 @@ def start_bot(bot):
             if type_transaction == "Buy":
                 Transaction.ValueUpdate(value={"state_transaction": "waiting_user_photo", }, id=call.message.chat.id)
 
-                bot.send_message(call.message.chat.id, f"""
-    {SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][10][0]}
-
-    {SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][10][2]} {float(amount_crypto)} {cryptocoin}
-    {SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][10][4]} {amd_amount_pr} AMD
-
-
-    {SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][10][1]}
-    """, )
+                bot.send_message(call.message.chat.id, text="estex petqa lini amdyov ev criptoyov gumari qanak@ inchpes naev owneri walet namber@")
+#                                  f"""
+# {Translate().ShowText(call.message.chat.id, 12)}
+# {Translate().ShowText(call.message.chat.id, 15)} {}
+# {Translate().ShowText(call.message.chat.id, 14)} {float(amount_crypto)} {cryptocoin}
+# {Translate().ShowText(call.message.chat.id, 16)} {amd_amount_pr} AMD
+#
+# {Translate().ShowText(call.message.chat.id, 13)}
+#     """, )
 
                 markup_manually = types.InlineKeyboardMarkup(row_width=1)
                 manual = types.InlineKeyboardButton(text=SENTENCE_BOT[
                     Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][19],
                                                     callback_data="manually")
+
                 markup_manually.add(manual)
                 bot.send_message(call.message.chat.id, text="ete chuneq ktron apa sexmeq lracnel knopken",
                                  reply_markup=markup_manually)
@@ -234,7 +223,6 @@ def start_bot(bot):
             ClassMCH = Churancy_chack()
             ClassMCH.CurChack(bot)
 
-
         elif str(call.data).split("_")[0] == "SendBlockchaneUrl":
             user_id = str(call.data).split("_")[1]
             transaction_id = Transaction.TransactionLastId(user_id)
@@ -252,64 +240,55 @@ def start_bot(bot):
                 TransactionExchange.transaction_id == transaction_id)[0][0]
 
             bot.send_message(user_id, text=f"""
-Գործարք № {transaction_id} | {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+Transaction № {transaction_id} | {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-գումարի չափը:  {int(amd_amount_pr)} AMD
-Գործարքի տեսակ:  {type_transaction}
-գումարի չափը կրիպտոարժույթով:
+Amount:  {int(amd_amount_pr)} AMD
+Transaction type:  {type_transaction}
+Amount in crypto:
 {amount_crypto} {cryptocoin}
-{cryptocoin} Հաշվեհամար:
+{cryptocoin} account:
 {user_wallet}
-Փոխանցման URL հասցե:
+Transaction URL:
 {service_check_index}
 """)
 
-
-@server.route('/' + str(TOKEN), methods=['POST'])
-def get_message():
-    json_string = request.get_data().decode('utf-8')
-    update = telebot.types.Update.de_json(json_string)
-    bot.process_new_updates([update])
-    return '!', 200
-
-
-@server.route('/')
-def webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url=APP_URL)
-    return '!', 200
-
-
-if __name__ == '__main__':
-    bot.set_my_commands([
-        telebot.types.BotCommand("/start", "start the bot"),
-        telebot.types.BotCommand("/language", "choose a language"),
-        telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
-    ])
-    start_bot(bot)
-    server.config.update(PROPAGATE_EXCEPTIONS=True)
-    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
-
-# 30 rope heto chek@ atmena lini
-# logeri garc@ lucel json faili ognutyamb
-# texteri het xnirner@ lucel
-# maximal gumar@ grelu qanak@ sahmanel ev data sarqel
-# env fail@ havaqel
-# admin panel@
-# informacian poxelu hnaravorutyun
-# sarqel database vortex grvum e informacia vor@ etaka klini popoxutyan boti ognutyamb
-# botum avelacnel admin funkcian
-# usernerin startus talu hnaravorutyun
-# interfaceum tal hnaravorutyun user id-ov poxel useri status@
-
-
+# @server.route('/' + str(TOKEN), methods=['POST'])
+# def get_message():
+#     json_string = request.get_data().decode('utf-8')
+#     update = telebot.types.Update.de_json(json_string)
+#     bot.process_new_updates([update])
+#     return '!', 200
+#
+# @server.route('/')
+# def webhook():
+#     bot.remove_webhook()
+#     bot.set_webhook(url=APP_URL)
+#     return '!', 200
+#
 # if __name__ == '__main__':
-#     bot = telebot.TeleBot(TOKEN)
-#     start_bot(bot)
 #     bot.set_my_commands([
 #         telebot.types.BotCommand("/start", "start the bot"),
 #         telebot.types.BotCommand("/language", "choose a language"),
 #         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
 #     ])
-#     bot.polling(none_stop=True, interval=0)
+#     start_bot(bot)
+#     server.config.update(PROPAGATE_EXCEPTIONS=True)
+#     server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+if __name__ == '__main__':
+    bot = telebot.TeleBot(TOKEN)
+    start_bot(bot)
+    bot.set_my_commands([
+        telebot.types.BotCommand("/start", "start the bot"),
+        telebot.types.BotCommand("/language", "choose a language"),
+        telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
+    ])
+    bot.polling(none_stop=True, interval=0)
+
+# sarqel maximum gumari gnelu qanak@ AMD USD ...
+# 30 rope heto chek@ atmena lini
+# logeri garc@ lucel json faili ognutyamb
+# texteri het xnirner@ lucel
+# admin panel@
+    # botum avelacnel admin funkcian
+    # interfaceum tal hnaravorutyun user id-ov poxel useri status@
