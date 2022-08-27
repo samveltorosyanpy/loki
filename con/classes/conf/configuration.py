@@ -1,9 +1,9 @@
 from con.classes.SQL.StartingPostgres import *
 import os
 
-# TOKEN = os.environ['TOKEN']
-TOKEN = "5309521467:AAEDLFgC-3J6GpcD4ImA2ZyEMvtKLCYcoRs"
-# APP_URL = f"https://lokichangebot.herokuapp.com/{TOKEN}"
+TOKEN = os.environ['TOKEN']
+# TOKEN = "5309521467:AAEDLFgC-3J6GpcD4ImA2ZyEMvtKLCYcoRs"
+APP_URL = f"https://lokichangebot.herokuapp.com/{TOKEN}"
 
 limit_time_send_photo = Sessions.query(ChangeInformation.limit_time_send_photo).filter(
     ChangeInformation.id == 1)[0][0]  # minutes

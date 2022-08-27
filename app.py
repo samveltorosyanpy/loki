@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 from loguru import logger
 from datetime import datetime
-# from flask import Flask, request
+from flask import Flask, request
 from con.classes.conf.configuration import *
 from con.classes.SQL.StartingPostgres import *
 from con.classes.ApiRequests import ClassApis
@@ -10,7 +10,7 @@ from con.classes.DownloadFile import DownloadFiles
 from con.classes.CuracyChack import Churancy_chack
 
 bot = telebot.TeleBot(TOKEN)
-# server = Flask(__name__)
+server = Flask(__name__)
 
 
 def start_bot(bot):
