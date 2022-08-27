@@ -252,38 +252,38 @@ Transaction URL:
 {service_check_index}
 """)
 
-# @server.route('/' + str(TOKEN), methods=['POST'])
-# def get_message():
-#     json_string = request.get_data().decode('utf-8')
-#     update = telebot.types.Update.de_json(json_string)
-#     bot.process_new_updates([update])
-#     return '!', 200
-#
-# @server.route('/')
-# def webhook():
-#     bot.remove_webhook()
-#     bot.set_webhook(url=APP_URL)
-#     return '!', 200
-#
-# if __name__ == '__main__':
-#     bot.set_my_commands([
-#         telebot.types.BotCommand("/start", "start the bot"),
-#         telebot.types.BotCommand("/language", "choose a language"),
-#         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
-#     ])
-#     start_bot(bot)
-#     server.config.update(PROPAGATE_EXCEPTIONS=True)
-#     server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+@server.route('/' + str(TOKEN), methods=['POST'])
+def get_message():
+    json_string = request.get_data().decode('utf-8')
+    update = telebot.types.Update.de_json(json_string)
+    bot.process_new_updates([update])
+    return '!', 200
+
+@server.route('/')
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url=APP_URL)
+    return '!', 200
 
 if __name__ == '__main__':
-    bot = telebot.TeleBot(TOKEN)
-    start_bot(bot)
     bot.set_my_commands([
         telebot.types.BotCommand("/start", "start the bot"),
         telebot.types.BotCommand("/language", "choose a language"),
         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
     ])
-    bot.polling(none_stop=True, interval=0)
+    start_bot(bot)
+    server.config.update(PROPAGATE_EXCEPTIONS=True)
+    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+# if __name__ == '__main__':
+#     bot = telebot.TeleBot(TOKEN)
+#     start_bot(bot)
+#     bot.set_my_commands([
+#         telebot.types.BotCommand("/start", "start the bot"),
+#         telebot.types.BotCommand("/language", "choose a language"),
+#         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
+#     ])
+#     bot.polling(none_stop=True, interval=0)
 
 # sarqel maximum gumari gnelu qanak@ AMD USD ...
 # 30 rope heto chek@ atmena lini
