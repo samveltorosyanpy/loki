@@ -18,4 +18,4 @@ class Translate(Base):
             text = Sessions.query(Translate.russian).filter(Translate.id == text_id)[0][0]
         elif language == "english":
             text = Sessions.query(Translate.english).filter(Translate.id == text_id)[0][0]
-        print(text)
+        return str(text)

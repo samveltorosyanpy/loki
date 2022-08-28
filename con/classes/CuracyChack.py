@@ -1,11 +1,11 @@
 import random
 from telebot import types
 from datetime import datetime
+from con.classes.BaySell import BaySellClass
 from con.classes.conf.configuration import *
 from con.classes.ApiRequests import ClassApis
 from con.classes.DownloadFile import DownloadFiles
 from con.classes.SQL.StartingPostgres import *
-
 
 class Churancy_chack():
     def __init__(self):
@@ -15,7 +15,9 @@ class Churancy_chack():
 
         @bot.message_handler(content_types=['text'])
         def changing_real_time(message):
+
             user_status = str(Sessions.query(TelegramUser.user_state).filter(TelegramUser.id == message.chat.id)[0][0])
+
             if user_status == "admin" or user_status == "owner_admin":
                 try:
                     user_id = str(message.text).split('|')[1]
@@ -27,13 +29,11 @@ class Churancy_chack():
                         value = {"service_check_index": str(blockchane_url)}
                         TransactionPhoto().ValueUpdate(value=value, id=int(user_id))
                         TransactionExchange().ValueUpdate(value={'state_transaction': "success"}, id=user_id)
+
                 except IndexError as ex:
                     pass
 
             else:
-                amount_user = Sessions.query(TransactionExchange.amount_user).filter(
-                    TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(message.chat.id))[0][
-                    0]
                 curacy = Sessions.query(TransactionExchange.curacy).filter(
                     TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(message.chat.id))[0][
                     0]
@@ -47,19 +47,17 @@ class Churancy_chack():
                     TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
                         message.chat.id))[0][0]
 
-                if amount_user == 0 and state_transaction == "waiting_user_amount":
+                if state_transaction == "waiting_user_amount":
                     while message.text.isnumeric():
-                        amount_exchange = int(message.text)
-                        while amount_exchange >= min_limits_amount_exchange[curacy]:
-
+                        amount_exchange = float(message.text)
+                        while amount_exchange >= min_limits_amount_exchange[curacy] and amount_exchange <= max_limits_amount_exchange[curacy]:
                             amount_user = message.text
-
                             Exchange = ClassApis([cryptocoin])
-                            amount_crypto, amd_amount_pr = Exchange.crypto_price_user(curacy=curacy,
+                            amount_crypto, amd_amount_pr, amount_crypto_pr = Exchange.crypto_price_user(curacy=curacy,
                                                                                       amount_user=amount_user)
 
                             update_value = {"amount_user": float(amount_user), "amount_crypto": float(amount_crypto),
-                                            "amd_amount_pr": float(amd_amount_pr),
+                                            "amd_amount_pr": float(amd_amount_pr), "amount_crypto_pr": float(amount_crypto_pr),
                                             "state_transaction": 'waiting_user_wallet'}
 
                             TransactionExchange().ValueUpdate(value=update_value,
@@ -77,22 +75,13 @@ class Churancy_chack():
                                 type_wallet3 = types.InlineKeyboardButton(text='Easypay', callback_data='Easypay')
                                 type_wallet4 = types.InlineKeyboardButton(text='↩️back', callback_data='back_wallet')
                                 markup_wallet.add(type_wallet1, type_wallet2, type_wallet3, type_wallet4)
-                                bot.send_message(message.chat.id, text=SENTENCE_BOT[
-                                    Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][
-                                        0]][12],
+                                bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 19),
                                                  reply_markup=markup_wallet)
+
                             elif type_transaction == "Sell":
-                                bot.send_message(message.chat.id, f"""
-    {SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][10][0]}
-    
-    {SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][10][2]} {amount_crypto} {cryptocoin}
-    
-    {SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][10][1]}
-                                                    """, )
-                                # {SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][10][3]} {cryptocoin} {wallet_data[cryptocoin.upper()]['wallet_key']}
+                                bot.send_message(message.chat.id, text=BaySellClass(message.chat.id, "Sell").InformationSendMany(), )
                                 TransactionExchange().ValueUpdate(value={"state_transaction": "waiting_user_photo"},
                                                                   id=message.chat.id)
-
                                 send_user_chack = DownloadFiles()
                                 send_user_chack.Photo_Download(bot)
 
@@ -100,15 +89,14 @@ class Churancy_chack():
 
                         else:
                             bot.send_message(message.chat.id,
-                                             f"{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][13]} {min_limits_amount_exchange[curacy]}")
+                                             f"{Translate().ShowText(message.chat.id, 20)} {min_limits_amount_exchange[curacy]} {Translate().ShowText(message.chat.id, 34)} {max_limits_amount_exchange[curacy]}")
 
                             break
 
                         break
 
                     else:
-                        bot.send_message(message.chat.id, text=SENTENCE_BOT[
-                            Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][14])
+                        bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 21))
 
                 elif state_transaction == "waiting_user_wallet_number" or state_transaction == "waiting_service_check_number":
 
@@ -122,15 +110,20 @@ class Churancy_chack():
                     markup_send_blockchane = types.InlineKeyboardMarkup(row_width=2)
 
                     type_cour1 = types.InlineKeyboardButton(text='Send',
-                                                            callback_data=f"SendBlockchaneUrl_{message.chat.id}")
+                                                            callback_data=f"SendUrl_{message.chat.id}")
                     type_cour2 = types.InlineKeyboardButton(text='Qcel :D', callback_data=f'failed_{message.chat.id}')
 
                     markup_send_blockchane.add(type_cour1, type_cour2)
+
+                    bot.send_message(admin_id, text=f"|{message.chat.id}")
                     if type_transaction == "Buy":
-                        bot.send_message(admin_id, text=f"User id [{message.chat.id}] | uxarkeq blockchanei hxum@",
+                        bot.send_message(admin_id, text=Translate().ShowText(admin_id, 35),
                                          reply_markup=markup_send_blockchane)
                     elif type_transaction == "Sell":
-                        bot.send_message(admin_id, text=f"User id [{message.chat.id}] | uxarkeq ktroni hamar@",
+                        bot.send_message(admin_id, text=f"""
+{Translate().ShowText(admin_id, 36)}
+{Translate().ShowText(admin_id, 35)}
+""",
                                          reply_markup=markup_send_blockchane)
 
                 elif state_transaction == 'waiting_manual_time':
@@ -142,7 +135,7 @@ class Churancy_chack():
                         time1 = False
                         time2 = False
                     while time1 == True or time2 == True:
-                        bot.send_message(message.chat.id, text="xndrum enq grel poxancvac gumari chaps@")
+                        bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 29))
                         TransactionExchange().ValueUpdate(
                             value={"state_transaction": "waiting_manual_amount"},
                             id=message.chat.id)
@@ -151,7 +144,7 @@ class Churancy_chack():
                             user_id=message.chat.id)
                         break
                     else:
-                        bot.send_message(message.chat.id, text="xndrum enq hetyevel nshvac formatin '20:00-20:30'")
+                        bot.send_message(message.chat.id, text=F"{Translate().ShowText(message.chat.id, 30)} '20:00-20:30'")
 
                 elif state_transaction == "waiting_manual_amount":
 
@@ -159,7 +152,7 @@ class Churancy_chack():
 
                         amount_exchange = int(message.text)
 
-                        while amount_exchange >= min_limits_amount_exchange[curacy]:
+                        while amount_exchange >= min_limits_amount_exchange[curacy] and amount_exchange <= max_limits_amount_exchange[curacy]:
                             TransactionPhoto().InsertTransactionPhoto(value={"client_check_image_id": None}, user_id=message.chat.id)
                             TransactionIsNotPhoto().ValueUpdate(value={"amount": message.text}, id=message.chat.id)
 
@@ -180,20 +173,19 @@ class Churancy_chack():
                             type_cour2 = types.InlineKeyboardButton(text='Cancel', callback_data='cancel_check')
                             markup_send_for_user_chack_info.add(type_cour1, type_cour2)
 
-                            bot.send_message(random_admin_id,
-                                             text=f"""amount-{message.text}
-                                             time interval-{time_interval}""")
+                            bot.send_message(random_admin_id,text=f"""
+amount-{message.text}
+time interval-{time_interval}
+""")
 
-                            bot.send_message(random_admin_id,
-                                             text="user@ chuni chek xndum enq stugel nshvac jamuv nshvac gumari qanakov ktron ka",
-                                             reply_markup=markup_send_for_user_chack_info)
+                            bot.send_message(random_admin_id, text=Translate().ShowText(random_admin_id, 31), reply_markup=markup_send_for_user_chack_info)
 
                             break
 
                         else:
 
                             bot.send_message(message.chat.id,
-                                             f"{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][13]} {min_limits_amount_exchange[curacy]}")
+                                             f"{Translate().ShowText(message.chat.id, 20)} {min_limits_amount_exchange[curacy]} {Translate().ShowText(message.chat.id, 34)} {max_limits_amount_exchange[curacy]}")
 
                             break
 
@@ -201,5 +193,4 @@ class Churancy_chack():
 
                     else:
 
-                        bot.send_message(message.chat.id, text=SENTENCE_BOT[
-                            Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][14])
+                        bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 21))

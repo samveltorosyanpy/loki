@@ -16,7 +16,7 @@ class DownloadFiles():
         pass
 
     def Photo_Download(self, bot):
-        @bot.message_handler(content_types=['photo', "text"])
+        @bot.message_handler(content_types=['photo'])
         def handle_docs_document(message):
             state = Sessions.query(TransactionExchange.state_transaction).filter(TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(message.chat.id))[0][0]
             if state == 'waiting_user_photo':
@@ -40,9 +40,7 @@ class DownloadFiles():
                 type_cour2 = types.InlineKeyboardButton(text='Cancel', callback_data=f'CancelCheck_{message.chat.id}')
                 markup_send_for_user_photo.add(type_cour1, type_cour2)
 
-                bot.send_message(random_admin_id, text="""
-                        ete chek@ liovin stugvac e sexmeq cofirme ev uxarkeq blockchain hxom@.
-                        """)
+                bot.send_message(random_admin_id, text=Translate().ShowText(random_admin_id, 33))
                 photo = open(src, 'rb')
                 bot.send_photo(random_admin_id, photo, reply_markup=markup_send_for_user_photo)
 

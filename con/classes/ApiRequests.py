@@ -36,11 +36,11 @@ class ClassApis():
 
             result = float(amount_user) / float(req.json()[curacy.upper()])
             result_amd = float(result) * float(req.json()["AMD"])
-            result_amd = str(result_amd + result_amd / 100 * commission).split(".")[0][:-2] + '00'
+            result_amd = str(result_amd + result_amd / 100 * float(commission)).split(".")[0][:-2] + '00'
+            result_crypto = result + result / 100 * commission
+            return str(result)[:11], str(result_amd)[:11], result_crypto
 
-            return str(result)[:11], str(result_amd)[:11]
-
-# cryptocoin_array = ['DASH']
-# test = ClassApis(cryptocoin_array)
-# # # # test.all_crypto_price()
-# print(test.crypto_price_user("USD", 100))
+cryptocoin_array = ['DASH']
+test = ClassApis(cryptocoin_array)
+# # # test.all_crypto_price()
+print(test.crypto_price_user("DASH", 1))

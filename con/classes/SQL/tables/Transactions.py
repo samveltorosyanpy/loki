@@ -9,10 +9,11 @@ class TransactionExchange(Base):
 
   transaction_id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
   amount_user = Column(Float, nullable=True)
+  amd_amount_pr = Column(Float, nullable=True)
   curacy = Column(String(250), nullable=True)
   amount_crypto = Column(Float, nullable=True)
+  amount_crypto_pr = Column(Float, nullable=True)
   cryptocoin = Column(String(250), nullable=True)
-  amd_amount_pr = Column(Float, nullable=True)
   type_transaction = Column(String(250), nullable=True)
   user_wallet = Column(String(250), nullable=True)
   armenian_wallet = Column(String(250), nullable=True)

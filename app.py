@@ -2,7 +2,8 @@ import telebot
 from telebot import types
 from loguru import logger
 from datetime import datetime
-from flask import Flask, request
+# from flask import Flask, request
+from con.classes.BaySell import BaySellClass
 from con.classes.conf.configuration import *
 from con.classes.SQL.StartingPostgres import *
 from con.classes.ApiRequests import ClassApis
@@ -21,11 +22,9 @@ def start_bot(bot):
                 TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(message.chat.id)).delete()
             Sessions.commit()
             bot.send_message(message.chat.id, text=
-            SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][4])
+            Translate().ShowText(message.chat.id, 5))
 
         if message.text == "/start":
-            # logger.add(f"{PATH}/con/logs/{message.chat.id}_user_log.log", format="{time}, {level}, {message}",
-            #            level="DEBUG")
             username = message.from_user.username if message.from_user.username is not None else message.from_user.last_name
             UserTable.InsertUser(id=message.chat.id, user_name=username, language="russian", user_state="client")
 
@@ -34,13 +33,10 @@ def start_bot(bot):
             type_cour2 = types.InlineKeyboardButton(text='DASH', callback_data='dash')
             type_cour3 = types.InlineKeyboardButton(text='LTC', callback_data='ltc')
             type_cour4 = types.InlineKeyboardButton(text='XRP', callback_data='xrp')
-            type_cour5 = types.InlineKeyboardButton(text=SENTENCE_BOT[
-                Sessions.query(TelegramUser.language).filter(TelegramUser.id == message.chat.id)[0][0]][1],
+            type_cour5 = types.InlineKeyboardButton(text=Translate().ShowText(message.chat.id, 2),
                                                     callback_data='ShowPrice')
             markup.add(type_cour1, type_cour2, type_cour3, type_cour4, type_cour5)
-            bot.send_message(message.chat.id, text=
-            Translate().ShowText(message.chat.id, 1),
-                             reply_markup=markup)
+            bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 1), reply_markup=markup)
 
         if message.text == "/language":
             markup_language = types.InlineKeyboardMarkup(row_width=1)
@@ -53,8 +49,10 @@ def start_bot(bot):
                              reply_markup=markup_language)
 
         if message.text == "/admin" and message.chat.id == owner_id:
+
             bot.send_message(message.chat.id, text="""
             barev, du mutq es gorcel boti admin hartak vortex karox es boti het kapvac kargavorumner anel""")
+
 
     @bot.callback_query_handler(func=lambda call: True)
     def query_handler(call):
@@ -64,10 +62,13 @@ def start_bot(bot):
                 TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
 
             markup_buy_sell = types.InlineKeyboardMarkup(row_width=2)
-            type_buy = types.InlineKeyboardButton(text=Translate().ShowText(call.message.chat.id, 6), callback_data=f"Buy {cryptocoin}") #
-            type_sell = types.InlineKeyboardButton(text=Translate().ShowText(call.message.chat.id, 7), callback_data=f"Sell {cryptocoin}") #
+            type_buy = types.InlineKeyboardButton(text=Translate().ShowText(call.message.chat.id, 6),
+                                                  callback_data=f"Buy {cryptocoin}")  #
+            type_sell = types.InlineKeyboardButton(text=Translate().ShowText(call.message.chat.id, 7),
+                                                   callback_data=f"Sell {cryptocoin}")  #
             markup_buy_sell.add(type_buy, type_sell)
-            bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 8),reply_markup=markup_buy_sell) #
+            bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 8),
+                             reply_markup=markup_buy_sell)  #
 
 
         elif call.data == "ShowPrice":
@@ -93,9 +94,7 @@ def start_bot(bot):
                 values={"language": language})
             Sessions.commit()
             Sessions.close()
-            bot.send_message(call.message.chat.id, text=
-            SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][
-                17])
+            bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 24))
             logger.debug(f"User id [{call.message.chat.id}] | Update the language [{language.upper()}]")
 
         elif str(call.data).split(' ')[0] == "Buy" or str(call.data).split(' ')[0] == "Sell":
@@ -110,9 +109,8 @@ def start_bot(bot):
             curacy2 = types.InlineKeyboardButton(text=f"USD", callback_data=f"to_usd")
             curacy3 = types.InlineKeyboardButton(text=f"{cryptocoin.upper()}", callback_data=f"to_{cryptocoin.lower()}")
             markup_curacy.add(curacy1, curacy2, curacy3)
-            bot.send_message(call.message.chat.id, text=
-            SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][
-                3], reply_markup=markup_curacy)
+            bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 11),
+                             reply_markup=markup_curacy)
 
         elif call.data == f"to_btc" or call.data == f"to_xrp" or call.data == f"to_ltc" or call.data == f"to_dash" or call.data == "to_amd" or call.data == "to_usd" or call.data == "back_wallet":
             if call.data == "back_wallet":
@@ -121,9 +119,7 @@ def start_bot(bot):
                 Transaction.ValueUpdate(value={"amount_user": 0, "state_transaction": "waiting_user_amount",
                                                "curacy": str(call.data).split('_')[1].upper()}, id=call.message.chat.id)
 
-            bot.send_message(call.message.chat.id, text=
-            SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][
-                9])
+            bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 11))
 
             ClassMCH = Churancy_chack()
             ClassMCH.CurChack(bot)
@@ -132,12 +128,6 @@ def start_bot(bot):
 
             type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
                 TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
-            cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
-            amount_crypto = Sessions.query(TransactionExchange.amount_crypto).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
-            amd_amount_pr = (Sessions.query(TransactionExchange.amd_amount_pr).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0])
             state = Sessions.query(TransactionExchange.state_transaction).filter(
                 TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
 
@@ -147,23 +137,14 @@ def start_bot(bot):
             if type_transaction == "Buy":
                 Transaction.ValueUpdate(value={"state_transaction": "waiting_user_photo", }, id=call.message.chat.id)
 
-                bot.send_message(call.message.chat.id, text="estex petqa lini amdyov ev criptoyov gumari qanak@ inchpes naev owneri walet namber@")
-#                                  f"""
-# {Translate().ShowText(call.message.chat.id, 12)}
-# {Translate().ShowText(call.message.chat.id, 15)} {}
-# {Translate().ShowText(call.message.chat.id, 14)} {float(amount_crypto)} {cryptocoin}
-# {Translate().ShowText(call.message.chat.id, 16)} {amd_amount_pr} AMD
-#
-# {Translate().ShowText(call.message.chat.id, 13)}
-#     """, )
+                bot.send_message(call.message.chat.id, text=BaySellClass(call.message.chat.id, "Bay").InformationSendMany())
 
                 markup_manually = types.InlineKeyboardMarkup(row_width=1)
-                manual = types.InlineKeyboardButton(text=SENTENCE_BOT[
-                    Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][19],
+                manual = types.InlineKeyboardButton(text=Translate().ShowText(call.message.chat.id, 26),
                                                     callback_data="manually")
 
                 markup_manually.add(manual)
-                bot.send_message(call.message.chat.id, text="ete chuneq ktron apa sexmeq lracnel knopken",
+                bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 32),
                                  reply_markup=markup_manually)
 
                 send_user_chack = DownloadFiles()
@@ -171,7 +152,7 @@ def start_bot(bot):
 
             elif type_transaction == "Sell" and state == "waiting_choose_wallet":
                 bot.send_message(call.message.chat.id,
-                                 text=F"{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][11][0]} {call.data} {SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == call.message.chat.id)[0][0]][11][1]}")
+                                 text=F"{Translate().ShowText(call.message.chat.id, 17)} {call.data} {Translate().ShowText(call.message.chat.id, 18)}")
                 Transaction.ValueUpdate(value={'state_transaction': 'waiting_user_wallet_number', },
                                         id=call.message.chat.id)
                 Sessions.query(TransactionExchange).filter(
@@ -181,10 +162,9 @@ def start_bot(bot):
                 ClassMCH.CurChack(bot)
 
         elif str(call.data).split("_")[0] == "SendPhotoUser":
-            transaction_id = Transaction.TransactionLastId(str(call.data).split("_")[1])
+            user_id = str(call.data).split("_")[1]
+            transaction_id = Transaction.TransactionLastId(user_id)
             type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
-                TransactionExchange.transaction_id == transaction_id)[0][0]
-            user_id = Sessions.query(TransactionExchange.user_id).filter(
                 TransactionExchange.transaction_id == transaction_id)[0][0]
 
             if type_transaction == "Buy":
@@ -192,7 +172,7 @@ def start_bot(bot):
                 cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
                     TransactionExchange.transaction_id == transaction_id)[0][0]
                 bot.send_message(int(user_id),
-                                 text=f"{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == user_id)[0][0]][11][0]} {cryptocoin} {SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == user_id)[0][0]][11][1]}")
+                                 text=f"{Translate().ShowText(int(user_id), 17)} {cryptocoin} {Translate().ShowText(int(user_id), 18)}")
                 Transaction.ValueUpdate(value={'state_transaction': 'waiting_user_wallet_number', },
                                         id=int(user_id))
                 ClassMCH = Churancy_chack()
@@ -205,7 +185,7 @@ def start_bot(bot):
                 type_wallet3 = types.InlineKeyboardButton(text='Easypay', callback_data='Easypay')
                 markup_wallet.add(type_wallet1, type_wallet2, type_wallet3)
                 bot.send_message(user_id,
-                                 text=f"{SENTENCE_BOT[Sessions.query(TelegramUser.language).filter(TelegramUser.id == user_id)[0][0]][12]}",
+                                 text=f"{Translate().ShowText(call.message.chat.id, 19)}",
                                  reply_markup=markup_wallet)
                 Transaction.ValueUpdate(value={'state_transaction': 'waiting_choose_wallet', }, id=user_id)
                 ClassMCH = Churancy_chack()
@@ -213,17 +193,17 @@ def start_bot(bot):
 
         elif str(call.data).split('_')[0] == "CancelCheck":
             user_id = str(call.data).split('_')[1]
-            bot.send_message(user_id, text="xndrum enq noric uxarkel nkar@ aveli lav rakursic")
+            bot.send_message(user_id, text=Translate().ShowText(user_id, 27))
             Transaction.ValueUpdate({'state_transaction': "waiting_user_photo"}, id=user_id)
 
         elif call.data == "manually":
             Transaction.ValueUpdate(value={"state_transaction": 'waiting_manual_time'}, id=call.message.chat.id)
             bot.send_message(call.message.chat.id,
-                             text="kxndrem grel motavor jam@ qnisin e katarvel poxancum@ partadir ays formatov '20:00-20:30'")
+                             text=f"{Translate().ShowText(call.message.chat.id, 28)} '20:00-20:30'")
             ClassMCH = Churancy_chack()
             ClassMCH.CurChack(bot)
 
-        elif str(call.data).split("_")[0] == "SendBlockchaneUrl":
+        elif str(call.data).split("_")[0] == "SendUrl":
             user_id = str(call.data).split("_")[1]
             transaction_id = Transaction.TransactionLastId(user_id)
             service_check_index = Sessions.query(TransactionPhoto.service_check_index).filter(
@@ -244,13 +224,13 @@ Transaction № {transaction_id} | {datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 Amount:  {int(amd_amount_pr)} AMD
 Transaction type:  {type_transaction}
-Amount in crypto:
-{amount_crypto} {cryptocoin}
+Amount in crypto:  {amount_crypto} {cryptocoin}
 {cryptocoin} account:
 {user_wallet}
 Transaction URL:
 {service_check_index}
 """)
+
 
 @server.route('/' + str(TOKEN), methods=['POST'])
 def get_message():
@@ -276,6 +256,7 @@ if __name__ == '__main__':
     server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 # if __name__ == '__main__':
+#     bot.delete_webhook()
 #     bot = telebot.TeleBot(TOKEN)
 #     start_bot(bot)
 #     bot.set_my_commands([
@@ -285,10 +266,13 @@ if __name__ == '__main__':
 #     ])
 #     bot.polling(none_stop=True, interval=0)
 
-# sarqel maximum gumari gnelu qanak@ AMD USD ...
+# stexcel funkcia vortex ogtatiroch grvac gumari qanaki mech knshvi naev kamisian
 # 30 rope heto chek@ atmena lini
+# useri hastatman url txadrelu funkcian nael
+
 # logeri garc@ lucel json faili ognutyamb
 # texteri het xnirner@ lucel
+
 # admin panel@
-    # botum avelacnel admin funkcian
-    # interfaceum tal hnaravorutyun user id-ov poxel useri status@
+# botum avelacnel admin funkcian
+# interfaceum tal hnaravorutyun user id-ov poxel useri status@
