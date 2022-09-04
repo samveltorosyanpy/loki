@@ -1,6 +1,3 @@
-# from sqlalchemy import Column, Integer, String, ForeignKey
-# from con.classes.SQL.conf.config import Base, Session
-# from con.classes.SQL.tables.conf.config import *
 from con.classes.SQL.tables.Transactions import *
 from loguru import logger
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="LOKI" uuid="7494d7e3-9ed4-4865-a9b8-bc6f1790c689">
+    <data-source source="LOCAL" name="LOKI" uuid="92fa8e55-111b-4db0-912e-25b35388a7f3">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://ec2-34-248-169-69.eu-west-1.compute.amazonaws.com:5432/d33is1e5ns10cm</jdbc-url>
+      <jdbc-url>jdbc:postgresql://ec2-52-19-188-149.eu-west-1.compute.amazonaws.com:5432/d31234aqtiabug</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

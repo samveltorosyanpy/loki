@@ -40,7 +40,7 @@ class ClassApis():
             result_crypto = result + result / 100 * commission
             return str(result)[:11], str(result_amd)[:11], result_crypto
 
-cryptocoin_array = ['DASH']
-test = ClassApis(cryptocoin_array)
-# # # test.all_crypto_price()
-print(test.crypto_price_user("DASH", 1))
+# cryptocoin_array = ['DASH']
+# test = ClassApis(cryptocoin_array)
+# # # # test.all_crypto_price()
+# print(test.crypto_price_user("DASH", 1))

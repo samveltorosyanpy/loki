@@ -31,10 +31,6 @@ class ChangeInformation(Base):
   owner_walet_telcell = Column(String(250), nullable=False)
   owner_walet_easypay = Column(String(250), nullable=False)
 
-  owner_walet_btc = Column(String(250), nullable=False)
-  owner_walet_dash = Column(String(250), nullable=False)
-  owner_walet_ltc = Column(String(250), nullable=False)
-  owner_walet_xrp = Column(String(250), nullable=False)
 
   def ValueUpdate(self, value, id):
     transaction_id = ChangeInformation().TransactionLastId(id)

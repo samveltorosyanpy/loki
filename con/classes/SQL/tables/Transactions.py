@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float
 from con.classes.SQL.tables.conf.config import Base, Session
 from loguru import logger
+
+
 Sessions = Session()
 
 
@@ -15,6 +17,7 @@ class TransactionExchange(Base):
   amount_crypto_pr = Column(Float, nullable=True)
   cryptocoin = Column(String(250), nullable=True)
   type_transaction = Column(String(250), nullable=True)
+  owner_wallet = Column(String(250), nullable=True)
   user_wallet = Column(String(250), nullable=True)
   armenian_wallet = Column(String(250), nullable=True)
   state_transaction = Column(String(250), nullable=True)
@@ -40,4 +43,12 @@ class TransactionExchange(Base):
     Sessions.commit()
     Sessions.close()
     logger.debug(f"User id [{id}] | Update the table transaction_exchanges {value}")
+
+  # def Dellet(self, user_id):
+
+
+  def ChackStatus(self, user_id):
+    state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(id=user_id))[0][0]
+    if state_transaction != "success":
+      return False
 
