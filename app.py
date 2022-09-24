@@ -635,16 +635,16 @@ if __name__ == '__main__':
     server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 
-if __name__ == '__main__':
-    bot.delete_webhook()
-    start_bot(bot)
+# if __name__ == '__main__':
+#     bot.delete_webhook()
+#     start_bot(bot)
 
-    bot.set_my_commands([
-        telebot.types.BotCommand("/start", "start the bot"),
-        telebot.types.BotCommand("/language", "choose a language"),
-        telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
-    ])
-    bot.polling(none_stop=True, interval=0)
+#     bot.set_my_commands([
+#         telebot.types.BotCommand("/start", "start the bot"),
+#         telebot.types.BotCommand("/language", "choose a language"),
+#         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
+#     ])
+#     bot.polling(none_stop=True, interval=0)
 
 # db-ic select linox informacian texapoxvi arandin config faili mech
 # serveri anjatvel mianaluc heto transaqcian petqa sharunakvi
