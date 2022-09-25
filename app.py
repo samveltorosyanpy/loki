@@ -614,6 +614,7 @@ def start_bot(bot):
 @server.route('/' + TOKEN, methods=['POST'])
 def getMessage():
     bot.process_new_updates([telebot.types.Update.de_json(req2.stream.read().decode("utf-8"))])
+    bot.send_message(1357108258, "hgbjhj")
     return "!", 200
 
 @server.route("/")
