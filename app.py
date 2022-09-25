@@ -1,6 +1,7 @@
 import time
-from datetime import datetime
+from os import environ
 from loguru import logger
+from datetime import datetime
 from flask import Flask, request as req2
 from con.classes.Binance import BnanceApi
 from con.classes.conf.configuration import *
@@ -609,6 +610,22 @@ def start_bot(bot):
             photo = open(src, 'rb')
             bot.send_photo(admin_id, photo, reply_markup=ButtonsClass().MarkupConfirm(message))
 
+
+@server.route('/' + TOKEN, methods=['POST'])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(req2.stream.read().decode("utf-8"))])
+    return "!", 200
+
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url=f"https://obscure-meadow-83570.herokuapp.com/{TOKEN}")
+    return "!", 200
+
+if __name__ == '__main__':
+    server.debug = True
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+
 # @server.route(f'/{TOKEN}', methods=['POST'])
 # def get_message():
 #     bot.process_new_updates([telebot.types.Update.de_json(req2.stream.read().decode('utf-8'))])
@@ -626,15 +643,15 @@ def start_bot(bot):
 #     server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 
-if __name__ == '__main__':
-    bot.delete_webhook()
-    start_bot(bot)
-    bot.set_my_commands([
-        telebot.types.BotCommand("/start", "start the bot"),
-        telebot.types.BotCommand("/language", "choose a language"),
-        telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
-    ])
-    bot.polling(none_stop=True, interval=0)
+# if __name__ == '__main__':
+#     bot.delete_webhook()
+#     start_bot(bot)
+#     bot.set_my_commands([
+#         telebot.types.BotCommand("/start", "start the bot"),
+#         telebot.types.BotCommand("/language", "choose a language"),
+#         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
+#     ])
+#     bot.polling(none_stop=True, interval=0)
 
 # db-ic select linox informacian texapoxvi arandin config faili mech
 # serveri anjatvel mianaluc heto transaqcian petqa sharunakvi
