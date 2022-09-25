@@ -1,7 +1,7 @@
 import time
 from datetime import datetime
 from loguru import logger
-from flask import Flask, request
+from flask import Flask, request as req2
 from con.classes.Binance import BnanceApi
 from con.classes.conf.configuration import *
 from con.classes.ApiRequests import ClassApis
@@ -10,9 +10,9 @@ from con.classes.Utilites.Utils import UtilsApp
 from con.classes.BigTextsClass import BuySellClass
 from con.classes.buttons.button import ButtonsClass
 
-
 bot = telebot.TeleBot(TOKEN)
 server = Flask(__name__)
+
 
 def start_bot(bot):
     @bot.message_handler(commands=['start', 'clear', 'language', 'admin'])
@@ -611,40 +611,39 @@ def start_bot(bot):
             bot.send_photo(admin_id, photo, reply_markup=ButtonsClass().MarkupConfirm(message))
 
 
-@server.route('/' + str(TOKEN), methods=['POST'])
-def get_message():
-    json_string = request.get_data().decode('utf-8')
-    update = telebot.types.Update.de_json(json_string)
-    bot.process_new_updates([update])
-    return '!', 200
 
-@server.route('/')
-def webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url=APP_URL)
-    return '!', 200
+# @server.route(f'/{TOKEN}', methods=['POST'])
+# def get_message():
+#     json_string = req2.stream.read().decode('utf-8') update = telebot.types.Update.de_json(json_string)
+#     bot.process_new_updates([update])
+#     return '!', 200
+#
+# @server.route('/')
+# def webhook():
+#     bot.remove_webhook()
+#     bot.set_webhook(url=APP_URL)
+#     return '!', 200
+#
+# if __name__ == '__main__':
+#     # bot.set_my_commands([
+#     #     telebot.types.BotCommand("/start", "start the bot"),
+#     #     telebot.types.BotCommand("/language", "choose a language"),
+#     #     telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
+#     # ])
+#     start_bot(bot)
+#     server.config.update(PROPAGATE_EXCEPTIONS=True)
+#     server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 if __name__ == '__main__':
-    # bot.set_my_commands([
-    #     telebot.types.BotCommand("/start", "start the bot"),
-    #     telebot.types.BotCommand("/language", "choose a language"),
-    #     telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
-    # ])
+    bot.delete_webhook()
     start_bot(bot)
-    server.config.update(PROPAGATE_EXCEPTIONS=True)
-    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
-
-# if __name__ == '__main__':
-#     bot.delete_webhook()
-#     start_bot(bot)
-#
-#     bot.set_my_commands([
-#         telebot.types.BotCommand("/start", "start the bot"),
-#         telebot.types.BotCommand("/language", "choose a language"),
-#         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
-#     ])
-#     bot.polling(none_stop=True, interval=0)
+    bot.set_my_commands([
+        telebot.types.BotCommand("/start", "start the bot"),
+        telebot.types.BotCommand("/language", "choose a language"),
+        telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
+    ])
+    bot.polling(none_stop=True, interval=0)
 
 # db-ic select linox informacian texapoxvi arandin config faili mech
 # serveri anjatvel mianaluc heto transaqcian petqa sharunakvi
