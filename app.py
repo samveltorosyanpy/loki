@@ -13,292 +13,292 @@ from con.classes.buttons.button import ButtonsClass
 bot = telebot.TeleBot(TOKEN)
 server = Flask(__name__)
 
-def start_bot(bot):
-    @bot.message_handler(commands=['start', 'clear', 'language', 'admin'])
-    def choose_transaction(message):
+# def start_bot(bot):
+@bot.message_handler(commands=['start', 'clear', 'language', 'admin'])
+def choose_transaction(message):
 
-        if message.text == "/clear":
-            # clear kanchelu depqum maqrvum e sax informatian transaciayi het kapvac
-            delete_information = UtilsApp(bot=bot, message=message)
-            delete_information.DelleteTransactionData(message.chat.id)
+    if message.text == "/clear":
+        # clear kanchelu depqum maqrvum e sax informatian transaciayi het kapvac
+        delete_information = UtilsApp(bot=bot, message=message)
+        delete_information.DelleteTransactionData(message.chat.id)
 
-            bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 5))
+        bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 5))
 
-        if message.text == "/start":
-            # transacian sksvum e estexic user@ @ntrum e kriptovalutai tesak@ vor@ cankanum e poxanakel fyucherov
-            username = message.from_user.username if message.from_user.username is not None else message.from_user.last_name
+    if message.text == "/start":
+        # transacian sksvum e estexic user@ @ntrum e kriptovalutai tesak@ vor@ cankanum e poxanakel fyucherov
+        username = message.from_user.username if message.from_user.username is not None else message.from_user.last_name
 
-            UserTable.InsertUser(id=int(message.chat.id), user_name=str(username), language="russian",
-                                 user_state="client")
+        UserTable.InsertUser(id=int(message.chat.id), user_name=str(username), language="russian",
+                             user_state="client")
 
-            bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 1),
-                             reply_markup=ButtonsClass().MarkupStart(message))
+        bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 1),
+                         reply_markup=ButtonsClass().MarkupStart(message))
 
-        if message.text == "/language":
-            bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 3),
-                             reply_markup=ButtonsClass().MarkupLanguage())
+    if message.text == "/language":
+        bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 3),
+                         reply_markup=ButtonsClass().MarkupLanguage())
 
-        if message.text == "/admin" and message.chat.id == owner_id:
-            pass
+    if message.text == "/admin" and message.chat.id == owner_id:
+        pass
 
-    @bot.callback_query_handler(func=lambda call: True)
-    def query_handler(call):
+@bot.callback_query_handler(func=lambda call: True)
+def query_handler(call):
 
-        Chack = UtilsApp(bot, call.message)
+    Chack = UtilsApp(bot, call.message)
 
-        if call.data == "dash":
+    if call.data == "dash":
 
-            try:
-                state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
-                    TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
-            except IndexError as ex:
-                state_transaction = None
-
-            if state_transaction in static_status:
-
-                random_operatr = UtilsApp(bot, call.message).RandomAdmins()
-
-                Transaction.InsertTransactionPending(cryptocoin=call.data, state_transaction=state_transaction,
-                                                     user_id=call.message.chat.id, admin_id=random_operatr)
-
-                bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 8),
-                                 reply_markup=ButtonsClass().MarkupBuySell(call.message, call.data))
-
-            else:
-                Chack.ChackState(state_transaction)
-
-        elif call.data == "btc" or call.data == "usdt" or call.data == "xrp":
+        try:
             state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
                 TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
+        except IndexError as ex:
+            state_transaction = None
 
-            if state_transaction in static_status:
-                bot.send_message(call.message.chat.id,
-                                 text=f"{Translate().ShowText(call.message.chat.id, 40)} /start")
-            else:
-                Chack.ChackState(state_transaction)
+        if state_transaction in static_status:
+
+            random_operatr = UtilsApp(bot, call.message).RandomAdmins()
+
+            Transaction.InsertTransactionPending(cryptocoin=call.data, state_transaction=state_transaction,
+                                                 user_id=call.message.chat.id, admin_id=random_operatr)
+
+            bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 8),
+                             reply_markup=ButtonsClass().MarkupBuySell(call.message, call.data))
+
+        else:
+            Chack.ChackState(state_transaction)
+
+    elif call.data == "btc" or call.data == "usdt" or call.data == "xrp":
+        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+            TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
+
+        if state_transaction in static_status:
+            bot.send_message(call.message.chat.id,
+                             text=f"{Translate().ShowText(call.message.chat.id, 40)} /start")
+        else:
+            Chack.ChackState(state_transaction)
 
 
-        elif str(call.data).split("|")[0] == "Buy" or str(call.data).split("|")[0] == "Sell":
+    elif str(call.data).split("|")[0] == "Buy" or str(call.data).split("|")[0] == "Sell":
 
-            state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
+        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+            TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
 
-            if state_transaction in static_status:
+        if state_transaction in static_status:
 
-                cryptocoin = str(call.data).split("|")[1]
+            cryptocoin = str(call.data).split("|")[1]
 
-                Transaction.ValueUpdate(value={'type_transaction': str(call.data).split('|')[0],
-                                               "state_transaction": "waiting_user_carncy"}, id=call.message.chat.id)
+            Transaction.ValueUpdate(value={'type_transaction': str(call.data).split('|')[0],
+                                           "state_transaction": "waiting_user_carncy"}, id=call.message.chat.id)
 
-                bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 41),
-                                 reply_markup=ButtonsClass().MarkupReadAmount(cryptocoin))
-            else:
-                Chack.ChackState(state_transaction)
+            bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 41),
+                             reply_markup=ButtonsClass().MarkupReadAmount(cryptocoin))
+        else:
+            Chack.ChackState(state_transaction)
 
-        elif call.data in curacy_array:
+    elif call.data in curacy_array:
 
-            state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
+        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+            TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
 
-            if state_transaction in static_status:
+        if state_transaction in static_status:
 
-                Transaction.ValueUpdate(value={"state_transaction": "waiting_user_amount",
-                                               "curacy": str(call.data).split('_')[1].upper()},
-                                        id=call.message.chat.id)
+            Transaction.ValueUpdate(value={"state_transaction": "waiting_user_amount",
+                                           "curacy": str(call.data).split('_')[1].upper()},
+                                    id=call.message.chat.id)
 
-                bot.send_message(chat_id=call.message.chat.id, text=f"""
+            bot.send_message(chat_id=call.message.chat.id, text=f"""
 {Translate().ShowText(call.message.chat.id, 11)}
 
 {Translate().ShowText(call.message.chat.id, 53)}
 """,
-                                     reply_markup=ButtonsClass().MarkupRead(Translate().ShowText(call.message.chat.id, 50)), )
+                                 reply_markup=ButtonsClass().MarkupRead(Translate().ShowText(call.message.chat.id, 50)), )
 
-            else:
-                Chack.ChackState(state_transaction)
+        else:
+            Chack.ChackState(state_transaction)
 
-        elif  call.data == "read_rp":
+    elif  call.data == "read_rp":
 
-            state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
+        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+            TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
 
-            pr_read = Sessions.query(TransactionExchange.pr_read).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[
-                0][0]
+        pr_read = Sessions.query(TransactionExchange.pr_read).filter(
+            TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[
+            0][0]
 
-            if state_transaction == "waiting_user_amount":
+        if state_transaction == "waiting_user_amount":
 
-                if pr_read is True:
-                    Burron_text = Translate().ShowText(call.message.chat.id, 50)
-                    bool_pr = False
+            if pr_read is True:
+                Burron_text = Translate().ShowText(call.message.chat.id, 50)
+                bool_pr = False
 
-                    pr_text = f"""
+                pr_text = f"""
 {Translate().ShowText(call.message.chat.id, 11)}
 
 {Translate().ShowText(call.message.chat.id, 53)}
-                    """
+                """
 
-                if pr_read is False:
-                    Burron_text = Translate().ShowText(call.message.chat.id, 49)
-                    bool_pr = True
-                    pr_text = f"""
+            if pr_read is False:
+                Burron_text = Translate().ShowText(call.message.chat.id, 49)
+                bool_pr = True
+                pr_text = f"""
 {Translate().ShowText(call.message.chat.id, 11)}
 
 {Translate().ShowText(call.message.chat.id, 54)}
-                    """
+                """
 
-                Transaction.ValueUpdate(value={"pr_read": bool_pr}, id=call.message.chat.id)
+            Transaction.ValueUpdate(value={"pr_read": bool_pr}, id=call.message.chat.id)
 
-                bot.edit_message_text(text=pr_text, message_id=call.message.message_id, chat_id=call.message.chat.id,
-                                      reply_markup=ButtonsClass().MarkupRead(Burron_text))
-            else:
-                Chack.ChackState(state_transaction)
+            bot.edit_message_text(text=pr_text, message_id=call.message.message_id, chat_id=call.message.chat.id,
+                                  reply_markup=ButtonsClass().MarkupRead(Burron_text))
+        else:
+            Chack.ChackState(state_transaction)
 
-        elif call.data == "Idram" or call.data == "Telcell" or call.data == "Easypay":
+    elif call.data == "Idram" or call.data == "Telcell" or call.data == "Easypay":
 
-            state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+            TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
+
+        if state_transaction == f'waiting_user_wallet' or state_transaction == f'waiting_choose_wallet':
+
+            type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
                 TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
 
-            if state_transaction == f'waiting_user_wallet' or state_transaction == f'waiting_choose_wallet':
+            Transaction.ValueUpdate(value={"armenian_wallet": str(call.data)}, id=call.message.chat.id)
 
-                type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
-                    TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
+            if type_transaction == "Buy":
 
-                Transaction.ValueUpdate(value={"armenian_wallet": str(call.data)}, id=call.message.chat.id)
-
-                if type_transaction == "Buy":
-
-                    Transaction.ValueUpdate(value={"state_transaction": "waiting_user_photo", },
-                                            id=call.message.chat.id)
-
-                    BuySellClass(call.message.chat.id, type_transaction, bot).InformationSendMany(call.message)
-
-                elif type_transaction == "Sell":
-
-                    bot.send_message(call.message.chat.id,
-                                     text=F"{Translate().ShowText(call.message.chat.id, 17)} {call.data} {Translate().ShowText(call.message.chat.id, 18)}")
-
-                    Transaction.ValueUpdate(value={'state_transaction': 'waiting_user_wallet_number'},
-                                            id=call.message.chat.id)
-
-                    Sessions.query(TransactionExchange).filter(
-                        TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                            call.message.chat.id))
-
-            else:
-                Chack.ChackState(state_transaction)
-
-        elif str(call.data).split("|")[0] == "confirm":
-
-            user_id = str(call.data).split("|")[1]
-            transaction_id = Transaction.TransactionLastId(user_id)
-
-            state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
-                TransactionExchange.transaction_id == transaction_id)[0][0]
-
-            if state_transaction == "waiting_confirm_admin":
-
-                type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
-                    TransactionExchange.transaction_id == transaction_id)[0][0]
-
-                if type_transaction == "Buy":
-
-                    cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
-                        TransactionExchange.transaction_id == transaction_id)[0][0]
-
-                    bot.send_message(int(user_id),
-                                     text=f"{Translate().ShowText(int(user_id), 17)} {cryptocoin} {Translate().ShowText(int(user_id), 18)}")
-
-                    Transaction.ValueUpdate(value={'state_transaction': 'waiting_user_wallet_number'},
-                                            id=int(user_id))
-
-                elif type_transaction == "Sell":
-
-                    bot.send_message(user_id,
-                                     text=f"{Translate().ShowText(call.message.chat.id, 19)}",
-                                     reply_markup=ButtonsClass().MarkupChoosWallet())
-
-                    Transaction.ValueUpdate(value={'state_transaction': 'waiting_choose_wallet'}, id=user_id)
-
-        elif call.data == "manually":
-
-            transaction_id = Transaction.TransactionLastId(call.message.chat.id)
-            state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
-                TransactionExchange.transaction_id == transaction_id)[0][0]
-
-            if state_transaction == "waiting_user_photo":
-
-                Transaction.ValueUpdate(value={"state_transaction": 'waiting_manual_time'},
+                Transaction.ValueUpdate(value={"state_transaction": "waiting_user_photo", },
                                         id=call.message.chat.id)
+
+                BuySellClass(call.message.chat.id, type_transaction, bot).InformationSendMany(call.message)
+
+            elif type_transaction == "Sell":
+
                 bot.send_message(call.message.chat.id,
-                                 text=f"{Translate().ShowText(call.message.chat.id, 28)} '20:00-20:30'")
+                                 text=F"{Translate().ShowText(call.message.chat.id, 17)} {call.data} {Translate().ShowText(call.message.chat.id, 18)}")
 
+                Transaction.ValueUpdate(value={'state_transaction': 'waiting_user_wallet_number'},
+                                        id=call.message.chat.id)
 
-
-            else:
-                Chack.ChackState(state_transaction)
-
-        elif str(call.data).split('|')[0] == "send_crypto":
-            user_id = str(call.data).split('|')[1]
-            transaction_id = Transaction.TransactionLastId(user_id)
-            state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
-                TransactionExchange.transaction_id == transaction_id)[0][0]
-
-            if state_transaction == "waiting_service_check_number":
-
-                user_wallet = Sessions.query(TransactionExchange.user_wallet).filter(
+                Sessions.query(TransactionExchange).filter(
                     TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                        user_id))[0][0]
-                amount_crypto_pr = Sessions.query(TransactionExchange.amount_crypto_pr).filter(
-                    TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                        user_id))[0][0]
-                cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
-                    TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                        user_id))[0][0]
-                type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
-                    TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                        user_id))[0][0]
+                        call.message.chat.id))
 
-                description = f"transaction_id = {TransactionExchange().TransactionLastId(user_id)}, user_id={user_id}"
+        else:
+            Chack.ChackState(state_transaction)
 
-                SendCrypto = BnanceApi(crypto=str(cryptocoin).lower())
-                trx_id = SendCrypto.SendCrypto(user_address=str(user_wallet), amount=float(amount_crypto_pr),
-                                               description=description)
+    elif str(call.data).split("|")[0] == "confirm":
 
-                TransactionData().ValueUpdate(value={"service_check_index": trx_id}, id=user_id)
-                TransactionExchange().ValueUpdate(value={'state_transaction': "success"}, id=user_id)
+        user_id = str(call.data).split("|")[1]
+        transaction_id = Transaction.TransactionLastId(user_id)
 
-                ch = BuySellClass(user_id, type_transaction, bot)
-                bot.send_message(user_id, text=ch.Cack())
+        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+            TransactionExchange.transaction_id == transaction_id)[0][0]
 
-            else:
-                Chack.ChackState(state_transaction)
+        if state_transaction == "waiting_confirm_admin":
 
-        elif str(call.data).split('_')[0] == "CancelCheck":
-            user_id = str(call.data).split('_')[1]
-            transaction_id = Transaction.TransactionLastId(user_id)
-
-            state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
-                TransactionExchange.transaction_id == transaction_id)[0][0]
             type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
                 TransactionExchange.transaction_id == transaction_id)[0][0]
 
-            if state_transaction == "waiting_confirm_admin" and type_transaction == "Buy":
-                bot.send_message(user_id, text=Translate().ShowText(user_id, 27))
-                Transaction.ValueUpdate({'state_transaction': "waiting_user_photo"}, id=user_id)
+            if type_transaction == "Buy":
 
-            if state_transaction == "waiting_confirm_admin" and type_transaction == "Sell":
-                bot.send_message(user_id, text=Translate().ShowText(user_id, 52))
-                Transaction.ValueUpdate({'state_transaction': "waiting_user_send_id"}, id=user_id)
+                cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
+                    TransactionExchange.transaction_id == transaction_id)[0][0]
 
-            else:
-                Chack.ChackState(state_transaction)
+                bot.send_message(int(user_id),
+                                 text=f"{Translate().ShowText(int(user_id), 17)} {cryptocoin} {Translate().ShowText(int(user_id), 18)}")
 
-        elif call.data == "ShowPrice":
+                Transaction.ValueUpdate(value={'state_transaction': 'waiting_user_wallet_number'},
+                                        id=int(user_id))
 
-            AllPrice = ClassApis(cryptocoin_array)
-            all_price = AllPrice.all_crypto_price()
+            elif type_transaction == "Sell":
 
-            bot.reply_to(call.message, text=f"""
+                bot.send_message(user_id,
+                                 text=f"{Translate().ShowText(call.message.chat.id, 19)}",
+                                 reply_markup=ButtonsClass().MarkupChoosWallet())
+
+                Transaction.ValueUpdate(value={'state_transaction': 'waiting_choose_wallet'}, id=user_id)
+
+    elif call.data == "manually":
+
+        transaction_id = Transaction.TransactionLastId(call.message.chat.id)
+        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+            TransactionExchange.transaction_id == transaction_id)[0][0]
+
+        if state_transaction == "waiting_user_photo":
+
+            Transaction.ValueUpdate(value={"state_transaction": 'waiting_manual_time'},
+                                    id=call.message.chat.id)
+            bot.send_message(call.message.chat.id,
+                             text=f"{Translate().ShowText(call.message.chat.id, 28)} '20:00-20:30'")
+
+
+
+        else:
+            Chack.ChackState(state_transaction)
+
+    elif str(call.data).split('|')[0] == "send_crypto":
+        user_id = str(call.data).split('|')[1]
+        transaction_id = Transaction.TransactionLastId(user_id)
+        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+            TransactionExchange.transaction_id == transaction_id)[0][0]
+
+        if state_transaction == "waiting_service_check_number":
+
+            user_wallet = Sessions.query(TransactionExchange.user_wallet).filter(
+                TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
+                    user_id))[0][0]
+            amount_crypto_pr = Sessions.query(TransactionExchange.amount_crypto_pr).filter(
+                TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
+                    user_id))[0][0]
+            cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
+                TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
+                    user_id))[0][0]
+            type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
+                TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
+                    user_id))[0][0]
+
+            description = f"transaction_id = {TransactionExchange().TransactionLastId(user_id)}, user_id={user_id}"
+
+            SendCrypto = BnanceApi(crypto=str(cryptocoin).lower())
+            trx_id = SendCrypto.SendCrypto(user_address=str(user_wallet), amount=float(amount_crypto_pr),
+                                           description=description)
+
+            TransactionData().ValueUpdate(value={"service_check_index": trx_id}, id=user_id)
+            TransactionExchange().ValueUpdate(value={'state_transaction': "success"}, id=user_id)
+
+            ch = BuySellClass(user_id, type_transaction, bot)
+            bot.send_message(user_id, text=ch.Cack())
+
+        else:
+            Chack.ChackState(state_transaction)
+
+    elif str(call.data).split('_')[0] == "CancelCheck":
+        user_id = str(call.data).split('_')[1]
+        transaction_id = Transaction.TransactionLastId(user_id)
+
+        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+            TransactionExchange.transaction_id == transaction_id)[0][0]
+        type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
+            TransactionExchange.transaction_id == transaction_id)[0][0]
+
+        if state_transaction == "waiting_confirm_admin" and type_transaction == "Buy":
+            bot.send_message(user_id, text=Translate().ShowText(user_id, 27))
+            Transaction.ValueUpdate({'state_transaction': "waiting_user_photo"}, id=user_id)
+
+        if state_transaction == "waiting_confirm_admin" and type_transaction == "Sell":
+            bot.send_message(user_id, text=Translate().ShowText(user_id, 52))
+            Transaction.ValueUpdate({'state_transaction': "waiting_user_send_id"}, id=user_id)
+
+        else:
+            Chack.ChackState(state_transaction)
+
+    elif call.data == "ShowPrice":
+
+        AllPrice = ClassApis(cryptocoin_array)
+        all_price = AllPrice.all_crypto_price()
+
+        bot.reply_to(call.message, text=f"""
 {Translate().ShowText(call.message.chat.id, 9)}
 
 ✅  BTC/USD    {all_price[0]}
@@ -307,307 +307,307 @@ def start_bot(bot):
 ✅  DASH/USD   {all_price[3]}
 
 {Translate().ShowText(call.message.chat.id, 10)}
-        """)
-            logger.debug(
-                f"""user {call.message.chat.id} click the ShowPrice"""
-            )
+    """)
+        logger.debug(
+            f"""user {call.message.chat.id} click the ShowPrice"""
+        )
 
-        elif call.data == "armenian_language" or call.data == 'russian_language' or call.data == 'english_language':
+    elif call.data == "armenian_language" or call.data == 'russian_language' or call.data == 'english_language':
 
-            language = str(call.data).split("_")[0]
-            Sessions.query(TelegramUser).filter(TelegramUser.id == call.message.chat.id).update(
-                values={"language": language})
+        language = str(call.data).split("_")[0]
+        Sessions.query(TelegramUser).filter(TelegramUser.id == call.message.chat.id).update(
+            values={"language": language})
 
-            Sessions.commit()
-            Sessions.close()
+        Sessions.commit()
+        Sessions.close()
 
-            bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 24))
-            logger.debug(f"User id [{call.message.chat.id}] | Update the language [{language.upper()}]")
+        bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 24))
+        logger.debug(f"User id [{call.message.chat.id}] | Update the language [{language.upper()}]")
 
-        else:
-            pass
+    else:
+        pass
 
-    @bot.message_handler(content_types=['text'])
-    def changing_real_time(message):
+@bot.message_handler(content_types=['text'])
+def changing_real_time(message):
 
-        user_status = str(Sessions.query(TelegramUser.user_state).filter(TelegramUser.id == message.chat.id)[0][0])
+    user_status = str(Sessions.query(TelegramUser.user_state).filter(TelegramUser.id == message.chat.id)[0][0])
 
-        if user_status == "admin" or user_status == "owner_admin":
+    if user_status == "admin" or user_status == "owner_admin":
 
-            try:
+        try:
 
-                user_id = int(str(message.text).split('|')[1])
+            user_id = int(str(message.text).split('|')[1])
 
-                state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
-                    TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                        user_id))[0][0]
-                type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
-                    TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                        user_id))[0][0]
-
-                if state_transaction == "waiting_service_check_number" and type_transaction == "Sell":
-                    trx_id = str(message.text).split("|")[0]
-
-                    TransactionData().ValueUpdate(value={"service_check_index": trx_id},
-                                                  id=int(user_id))
-                    TransactionExchange().ValueUpdate(value={'state_transaction': "success"}, id=user_id)
-
-                    ch = BuySellClass(user_id, type_transaction, bot)
-                    bot.send_message(user_id, text=ch.Cack())
-
-            except IndexError as ex:
-                pass
-
-        else:
-
-            curacy = Sessions.query(TransactionExchange.curacy).filter(
-                TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(message.chat.id))[0][
-                0]
-            cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
-                TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                    message.chat.id))[0][0]
             state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
                 TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                    message.chat.id))[0][0]
+                    user_id))[0][0]
             type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
                 TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                    message.chat.id))[0][0]
-            pr_read = Sessions.query(TransactionExchange.pr_read).filter(
-                TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                    message.chat.id))[0][0]
+                    user_id))[0][0]
 
-            if state_transaction == "waiting_user_amount":
+            if state_transaction == "waiting_service_check_number" and type_transaction == "Sell":
+                trx_id = str(message.text).split("|")[0]
 
-                try:
-                    float(message.text)
-                    slt = True
-                except ValueError:
-                    slt = False
+                TransactionData().ValueUpdate(value={"service_check_index": trx_id},
+                                              id=int(user_id))
+                TransactionExchange().ValueUpdate(value={'state_transaction': "success"}, id=user_id)
 
-                while slt == True:
+                ch = BuySellClass(user_id, type_transaction, bot)
+                bot.send_message(user_id, text=ch.Cack())
 
-                    amount_exchange = float(message.text)
+        except IndexError as ex:
+            pass
 
-                    while amount_exchange >= min_limits_amount_exchange[curacy] and amount_exchange <= \
-                            max_limits_amount_exchange[curacy]:
+    else:
 
-                        amount_user = message.text
+        curacy = Sessions.query(TransactionExchange.curacy).filter(
+            TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(message.chat.id))[0][
+            0]
+        cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
+            TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
+                message.chat.id))[0][0]
+        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+            TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
+                message.chat.id))[0][0]
+        type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
+            TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
+                message.chat.id))[0][0]
+        pr_read = Sessions.query(TransactionExchange.pr_read).filter(
+            TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
+                message.chat.id))[0][0]
 
-                        Exchange = ClassApis([cryptocoin])
-                        amd_amount_pr, amount_crypto_pr, amount_crypto = Exchange.crypto_price_user(curacy=curacy,
-                                                                                                    amount_user=amount_user,
-                                                                                                    pr_read=pr_read,
-                                                                                                    type=type_transaction)
+        if state_transaction == "waiting_user_amount":
 
-                        type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
-                            TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
-                                message.chat.id))[0][0]
+            try:
+                float(message.text)
+                slt = True
+            except ValueError:
+                slt = False
 
-                        update_value = {
-                            "amount_user": float(amount_user),
-                            "amount_crypto": float(amount_crypto),
-                            "amd_amount_pr": float(amd_amount_pr),
-                            "amount_crypto_pr": float(amount_crypto_pr),
-                            "state_transaction": f'waiting_user_wallet',
-                            'datetime': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        }
+            while slt == True:
 
-                        TransactionExchange().ValueUpdate(value=update_value, id=message.chat.id)
+                amount_exchange = float(message.text)
 
-                        if type_transaction == "Buy":
+                while amount_exchange >= min_limits_amount_exchange[curacy] and amount_exchange <= \
+                        max_limits_amount_exchange[curacy]:
 
-                            bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 19),
-                                             reply_markup=ButtonsClass().MarkupChoosWallet())
+                    amount_user = message.text
 
-                        elif type_transaction == "Sell":
-                            owner_wallet = BnanceApi(cryptocoin).address
+                    Exchange = ClassApis([cryptocoin])
+                    amd_amount_pr, amount_crypto_pr, amount_crypto = Exchange.crypto_price_user(curacy=curacy,
+                                                                                                amount_user=amount_user,
+                                                                                                pr_read=pr_read,
+                                                                                                type=type_transaction)
 
-                            Transaction.ValueUpdate(
-                                value={"state_transaction": "waiting_user_send_id", "owner_wallet": owner_wallet},
-                                id=message.chat.id)
+                    type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
+                        TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
+                            message.chat.id))[0][0]
 
-                            crypto_check = BuySellClass(message.chat.id, "Sell", bot)
-                            crypto_check.InformationSendMany(message)
+                    update_value = {
+                        "amount_user": float(amount_user),
+                        "amount_crypto": float(amount_crypto),
+                        "amd_amount_pr": float(amd_amount_pr),
+                        "amount_crypto_pr": float(amount_crypto_pr),
+                        "state_transaction": f'waiting_user_wallet',
+                        'datetime': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    }
 
-                        break
+                    TransactionExchange().ValueUpdate(value=update_value, id=message.chat.id)
 
-                    else:
-                        bot.send_message(message.chat.id,
-                                         f"{Translate().ShowText(message.chat.id, 20)} {min_limits_amount_exchange[curacy]} {Translate().ShowText(message.chat.id, 34)} {max_limits_amount_exchange[curacy]}")
+                    if type_transaction == "Buy":
 
-                        break
+                        bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 19),
+                                         reply_markup=ButtonsClass().MarkupChoosWallet())
+
+                    elif type_transaction == "Sell":
+                        owner_wallet = BnanceApi(cryptocoin).address
+
+                        Transaction.ValueUpdate(
+                            value={"state_transaction": "waiting_user_send_id", "owner_wallet": owner_wallet},
+                            id=message.chat.id)
+
+                        crypto_check = BuySellClass(message.chat.id, "Sell", bot)
+                        crypto_check.InformationSendMany(message)
 
                     break
 
-
                 else:
-                    bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 21))
+                    bot.send_message(message.chat.id,
+                                     f"{Translate().ShowText(message.chat.id, 20)} {min_limits_amount_exchange[curacy]} {Translate().ShowText(message.chat.id, 34)} {max_limits_amount_exchange[curacy]}")
 
-            elif state_transaction == "waiting_user_send_id":
+                    break
 
-                Transaction.ValueUpdate({'state_transaction': "waiting_confirm_admin"},
-                                        id=message.chat.id)
-                TransactionData().InsertTransactionPhoto(time_interval=None, client_check_image_id=message.text,
-                                                         transaction_id=Transaction.TransactionLastId(message.chat.id))
+                break
 
-                admin_id = Sessions.query(TransactionExchange.admin_id).filter(
-                    TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
 
-                bot.send_message(admin_id, text=f"URL: {message.text}")
-                bot.send_message(admin_id, text=Translate().ShowText(admin_id, 33),
-                                 reply_markup=ButtonsClass().MarkupConfirm(message))
+            else:
+                bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 21))
 
-            if state_transaction == "waiting_user_wallet_number":
+        elif state_transaction == "waiting_user_send_id":
+
+            Transaction.ValueUpdate({'state_transaction': "waiting_confirm_admin"},
+                                    id=message.chat.id)
+            TransactionData().InsertTransactionPhoto(time_interval=None, client_check_image_id=message.text,
+                                                     transaction_id=Transaction.TransactionLastId(message.chat.id))
+
+            admin_id = Sessions.query(TransactionExchange.admin_id).filter(
+                TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+
+            bot.send_message(admin_id, text=f"URL: {message.text}")
+            bot.send_message(admin_id, text=Translate().ShowText(admin_id, 33),
+                             reply_markup=ButtonsClass().MarkupConfirm(message))
+
+        if state_transaction == "waiting_user_wallet_number":
+
+            TransactionExchange().ValueUpdate(
+                value={'user_wallet': message.text, "state_transaction": "waiting_service_check_number"},
+                id=message.chat.id)
+
+            admin_id = Sessions.query(TransactionExchange.admin_id).filter(
+                TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+            user_wallet = Sessions.query(TransactionExchange.user_wallet).filter(
+                TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+            armenian_wallet = Sessions.query(TransactionExchange.armenian_wallet).filter(
+                TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+            cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
+                TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+
+            if type_transaction == "Buy":
+
+                bot.send_message(admin_id, text=f"|{message.chat.id}")
+                bot.send_message(admin_id, text=f"{cryptocoin} {message.text}")
+
+                bot.send_message(admin_id, text=Translate().ShowText(admin_id, 35),
+                                 reply_markup=ButtonsClass().MarkupSend(message))
+
+            elif type_transaction == "Sell":
+
+                bot.send_message(admin_id, text=f"|{message.chat.id}")
+                bot.send_message(admin_id, text=f"""
+{Translate().ShowText(admin_id, 36)} {user_wallet} {armenian_wallet}
+{Translate().ShowText(admin_id, 35)}
+""",
+                                 )
+
+        elif state_transaction == 'waiting_manual_time':
+
+            time_s = message.text
+
+            try:
+
+                time1 = bool(datetime.strptime(time_s.split('-')[0], "%H:%M").strftime("%H:%M"))
+                time2 = bool(datetime.strptime(time_s.split('-')[1], "%H:%M").strftime("%H:%M"))
+
+            except:
+
+                time1 = False
+                time2 = False
+
+            while time1 == True or time2 == True:
+
+                bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 29))
 
                 TransactionExchange().ValueUpdate(
-                    value={'user_wallet': message.text, "state_transaction": "waiting_service_check_number"},
+                    value={"state_transaction": "waiting_manual_amount"},
                     id=message.chat.id)
 
-                admin_id = Sessions.query(TransactionExchange.admin_id).filter(
-                    TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
-                user_wallet = Sessions.query(TransactionExchange.user_wallet).filter(
-                    TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
-                armenian_wallet = Sessions.query(TransactionExchange.armenian_wallet).filter(
-                    TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
-                cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
-                    TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+                transaction_id = TransactionExchange().TransactionLastId(message.chat.id)
+                TransactionData().InsertTransactionPhoto(time_interval=message.text, client_check_image_id=None,
+                                                         transaction_id=int(transaction_id))
 
-                if type_transaction == "Buy":
+                break
 
-                    bot.send_message(admin_id, text=f"|{message.chat.id}")
-                    bot.send_message(admin_id, text=f"{cryptocoin} {message.text}")
+            else:
 
-                    bot.send_message(admin_id, text=Translate().ShowText(admin_id, 35),
-                                     reply_markup=ButtonsClass().MarkupSend(message))
+                bot.send_message(message.chat.id,
+                                 text=F"{Translate().ShowText(message.chat.id, 30)} '20:00-20:30'")
 
-                elif type_transaction == "Sell":
+        elif state_transaction == "waiting_manual_amount":
 
-                    bot.send_message(admin_id, text=f"|{message.chat.id}")
-                    bot.send_message(admin_id, text=f"""
-    {Translate().ShowText(admin_id, 36)} {user_wallet} {armenian_wallet}
-    {Translate().ShowText(admin_id, 35)}
-    """,
-                                     )
+            try:
+                float(message.text)
+                slt = True
+            except ValueError:
+                slt = False
 
-            elif state_transaction == 'waiting_manual_time':
+            while slt == True:
 
-                time_s = message.text
+                amount_exchange = float(message.text)
 
-                try:
+                while amount_exchange >= min_limits_amount_exchange["AMD"] and amount_exchange <= \
+                        max_limits_amount_exchange["AMD"]:
 
-                    time1 = bool(datetime.strptime(time_s.split('-')[0], "%H:%M").strftime("%H:%M"))
-                    time2 = bool(datetime.strptime(time_s.split('-')[1], "%H:%M").strftime("%H:%M"))
+                    time_interval = Sessions.query(TransactionData.time_interval).filter(
+                        TransactionData.transaction_id == TransactionExchange().TransactionLastId(
+                            message.chat.id))[0][0]
 
-                except:
+                    TransactionData().ValueUpdate(value={"amount": message.text}, id=message.chat.id)
 
-                    time1 = False
-                    time2 = False
-
-                while time1 == True or time2 == True:
-
-                    bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 29))
-
-                    TransactionExchange().ValueUpdate(
-                        value={"state_transaction": "waiting_manual_amount"},
+                    Transaction.ValueUpdate(
+                        value={"state_transaction": "waiting_confirm_admin"},
                         id=message.chat.id)
 
-                    transaction_id = TransactionExchange().TransactionLastId(message.chat.id)
-                    TransactionData().InsertTransactionPhoto(time_interval=message.text, client_check_image_id=None,
-                                                             transaction_id=int(transaction_id))
+                    admin_id = Sessions.query(TransactionExchange.admin_id).filter(
+                        TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[
+                        0][0]
+
+                    bot.send_message(admin_id, text=f"""
+amount-{message.text}
+time interval-{time_interval}
+""")
+                    bot.send_message(admin_id, text=Translate().ShowText(admin_id, 31),
+                                     reply_markup=ButtonsClass().MarkupConfirm(message))
 
                     break
 
                 else:
 
                     bot.send_message(message.chat.id,
-                                     text=F"{Translate().ShowText(message.chat.id, 30)} '20:00-20:30'")
-
-            elif state_transaction == "waiting_manual_amount":
-
-                try:
-                    float(message.text)
-                    slt = True
-                except ValueError:
-                    slt = False
-
-                while slt == True:
-
-                    amount_exchange = float(message.text)
-
-                    while amount_exchange >= min_limits_amount_exchange["AMD"] and amount_exchange <= \
-                            max_limits_amount_exchange["AMD"]:
-
-                        time_interval = Sessions.query(TransactionData.time_interval).filter(
-                            TransactionData.transaction_id == TransactionExchange().TransactionLastId(
-                                message.chat.id))[0][0]
-
-                        TransactionData().ValueUpdate(value={"amount": message.text}, id=message.chat.id)
-
-                        Transaction.ValueUpdate(
-                            value={"state_transaction": "waiting_confirm_admin"},
-                            id=message.chat.id)
-
-                        admin_id = Sessions.query(TransactionExchange.admin_id).filter(
-                            TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[
-                            0][0]
-
-                        bot.send_message(admin_id, text=f"""
-    amount-{message.text}
-    time interval-{time_interval}
-    """)
-                        bot.send_message(admin_id, text=Translate().ShowText(admin_id, 31),
-                                         reply_markup=ButtonsClass().MarkupConfirm(message))
-
-                        break
-
-                    else:
-
-                        bot.send_message(message.chat.id,
-                                         f"{Translate().ShowText(message.chat.id, 20)} {min_limits_amount_exchange['AMD']} {Translate().ShowText(message.chat.id, 34)} {max_limits_amount_exchange['AMD']}")
-
-                        break
+                                     f"{Translate().ShowText(message.chat.id, 20)} {min_limits_amount_exchange['AMD']} {Translate().ShowText(message.chat.id, 34)} {max_limits_amount_exchange['AMD']}")
 
                     break
 
-                else:
+                break
 
-                    bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 21))
+            else:
 
-    @bot.message_handler(content_types=['photo'])
-    def handle_docs_document(message):
-        transaction_id = TransactionExchange().TransactionLastId(message.chat.id)
-        state = Sessions.query(TransactionExchange.state_transaction).filter(
-            TransactionExchange.transaction_id == transaction_id)[0][0]
-        if state == 'waiting_user_photo':
-            time_msg = Translate().ShowText(message.chat.id, 39)
-            sm = ["🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚", "🕛"]
-            bot.send_message(message.chat.id, text=f"{time_msg} {sm[0]}")
+                bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 21))
 
-            for id in range(1, len(sm)):
-                bot.edit_message_text(text=f"{time_msg} {sm[id]}", chat_id=message.chat.id,
-                                      message_id=message.message_id + 1)
-                time.sleep(0.1)
+@bot.message_handler(content_types=['photo'])
+def handle_docs_document(message):
+    transaction_id = TransactionExchange().TransactionLastId(message.chat.id)
+    state = Sessions.query(TransactionExchange.state_transaction).filter(
+        TransactionExchange.transaction_id == transaction_id)[0][0]
+    if state == 'waiting_user_photo':
+        time_msg = Translate().ShowText(message.chat.id, 39)
+        sm = ["🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚", "🕛"]
+        bot.send_message(message.chat.id, text=f"{time_msg} {sm[0]}")
 
-            file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
-            downloaded_file = bot.download_file(file_info.file_path)
-            src = f"{PATH}/con/photo/client_check_image_id/{message.chat.id}-{message.photo[1].file_id}.png"
+        for id in range(1, len(sm)):
+            bot.edit_message_text(text=f"{time_msg} {sm[id]}", chat_id=message.chat.id,
+                                  message_id=message.message_id + 1)
+            time.sleep(0.1)
 
-            with open(src, 'wb') as new_file:
-                new_file.write(downloaded_file)
+        file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+        src = f"{PATH}/con/photo/client_check_image_id/{message.chat.id}-{message.photo[1].file_id}.png"
 
-            TransactionData().InsertTransactionPhoto(time_interval=None, client_check_image_id=message.photo[1].file_id,
-                                                     transaction_id=TransactionExchange().TransactionLastId(
-                                                         message.chat.id))
+        with open(src, 'wb') as new_file:
+            new_file.write(downloaded_file)
 
-            Transaction.ValueUpdate({'state_transaction': "waiting_confirm_admin"},
-                                    id=message.chat.id)
+        TransactionData().InsertTransactionPhoto(time_interval=None, client_check_image_id=message.photo[1].file_id,
+                                                 transaction_id=TransactionExchange().TransactionLastId(
+                                                     message.chat.id))
 
-            admin_id = Sessions.query(TransactionExchange.admin_id).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+        Transaction.ValueUpdate({'state_transaction': "waiting_confirm_admin"},
+                                id=message.chat.id)
 
-            bot.send_message(admin_id, text=Translate().ShowText(admin_id, 33))
-            photo = open(src, 'rb')
-            bot.send_photo(admin_id, photo, reply_markup=ButtonsClass().MarkupConfirm(message))
+        admin_id = Sessions.query(TransactionExchange.admin_id).filter(
+            TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+
+        bot.send_message(admin_id, text=Translate().ShowText(admin_id, 33))
+        photo = open(src, 'rb')
+        bot.send_photo(admin_id, photo, reply_markup=ButtonsClass().MarkupConfirm(message))
 
 @server.route(f'/{TOKEN}', methods=['POST'])
 def get_message():
@@ -621,8 +621,8 @@ def webhook():
     return '!', 200
 
 if __name__ == '__main__':
-    start_bot(bot)
-    server.config.update(PROPAGATE_EXCEPTIONS=True)
+    # start_bot(bot)
+    # server.config.update(PROPAGATE_EXCEPTIONS=True)
     server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 
