@@ -1,19 +1,19 @@
-import time
-from os import environ
-from loguru import logger
-from datetime import datetime
-from flask import Flask, request as req2
-from con.classes.Binance import BnanceApi
-from con.classes.conf.configuration import *
-from con.classes.ApiRequests import ClassApis
-from con.classes.SQL.StartingPostgres import *
-from con.classes.Utilites.Utils import UtilsApp
-from con.classes.BigTextsClass import BuySellClass
-from con.classes.buttons.button import ButtonsClass
-
-bot = telebot.TeleBot(TOKEN)
-server = Flask(__name__)
-
+# import time
+# from os import environ
+# from loguru import logger
+# from datetime import datetime
+# from flask import Flask, request as req2
+# from con.classes.Binance import BnanceApi
+# from con.classes.conf.configuration import *
+# from con.classes.ApiRequests import ClassApis
+# from con.classes.SQL.StartingPostgres import *
+# from con.classes.Utilites.Utils import UtilsApp
+# from con.classes.BigTextsClass import BuySellClass
+# from con.classes.buttons.button import ButtonsClass
+#
+# bot = telebot.TeleBot(TOKEN)
+# server = Flask(__name__)
+#
 # def start_bot(bot):
 #     @bot.message_handler(commands=['start', 'clear', 'language', 'admin'])
 #     def choose_transaction(message):
@@ -609,27 +609,43 @@ server = Flask(__name__)
 #             bot.send_message(admin_id, text=Translate().ShowText(admin_id, 33))
 #             photo = open(src, 'rb')
 #             bot.send_photo(admin_id, photo, reply_markup=ButtonsClass().MarkupConfirm(message))
+import os
 
-@bot.message_handler(commands=["start"])
-def starting(message):
-    if message.text == "/start":
-        bot.send_message(message.chat.id, "helo world")
+from flask import Flask, request
+
+import telebot
+
+TOKEN = '5429991269:AAFcaYyt6aB9wNoDQKvtyOXIh2B5ud05XOs'
+bot = telebot.TeleBot(TOKEN)
+server = Flask(__name__)
+
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
+
+
+@bot.message_handler(func=lambda message: True, content_types=['text'])
+def echo_message(message):
+    bot.reply_to(message, message.text)
 
 
 @server.route('/' + TOKEN, methods=['POST'])
 def getMessage():
-    bot.process_new_updates([telebot.types.Update.de_json(req2.stream.read().decode("utf-8"))])
-    bot.send_message(1357108258, "hgbjhj")
+    json_string = request.get_data().decode('utf-8')
+    update = telebot.types.Update.de_json(json_string)
+    bot.process_new_updates([update])
     return "!", 200
+
 
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url=f"https://obscure-meadow-83570.herokuapp.com/{TOKEN}")
+    bot.set_webhook(url='https://obscure-meadow-83570.herokuapp.com/' + TOKEN)
     return "!", 200
 
-if __name__ == '__main__':
-    server.debug = True
+
+if __name__ == "__main__":
     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
 # @server.route(f'/{TOKEN}', methods=['POST'])
