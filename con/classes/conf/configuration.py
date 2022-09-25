@@ -12,8 +12,6 @@ curacy_array = ["to_usdt", "to_xrp", "to_btc", "to_dash", "to_amd", "to_usd"]
 
 TOKEN = os.environ['TOKEN']
 
-APP_URL = f"https://lokichangebot.herokuapp.com/{TOKEN}"
-
 limit_time_send_photo = Sessions.query(ChangeInformation.limit_time_send_photo).filter(
     ChangeInformation.id == 1)[0][0]  # minutes
 
