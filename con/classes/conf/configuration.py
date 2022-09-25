@@ -1,8 +1,14 @@
+import os
 import telebot
 from telebot import types
-from con.classes.SQL.StartingPostgres import *
 from sqlalchemy import or_
-import os
+from con.classes.SQL.StartingPostgres import *
+
+static_status = [None, "start_transaction", "waiting_user_carncy", "waiting_user_amount", "waiting_user_wallet_buy", "waiting_user_wallet_sell" , "success"]
+
+cryptocoin_array = ['BTC', 'XRP', 'USDT', 'DASH']
+
+curacy_array = ["to_usdt", "to_xrp", "to_btc", "to_dash", "to_amd", "to_usd"]
 
 TOKEN = os.environ['TOKEN']
 
@@ -19,6 +25,10 @@ commission = Sessions.query(ChangeInformation.commission).filter(
 owner_id = Sessions.query(ChangeInformation.owner_id).filter(ChangeInformation.id == 1)[0][0]
 
 arm_price = Sessions.query(ChangeInformation.amd_price).filter(ChangeInformation.id == 1)[0][0]
+
+api_key = os.environ['API_KEY']
+
+api_secret = os.environ['API_SECRET']
 
 min_limits_amount_exchange = {
     "AMD": float(

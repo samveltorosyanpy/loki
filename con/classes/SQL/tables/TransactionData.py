@@ -14,12 +14,10 @@ class TransactionData(Base):
   transaction_id = Column(Integer, ForeignKey("transaction_exchanges.transaction_id"), nullable=True)
 
 
-  def InsertTransactionPhoto(self, value, user_id):
-    transaction_id = TransactionExchange().TransactionLastId(user_id)
-    Sessions.add(TransactionData(client_check_image_id=str(value['client_check_image_id']), transaction_id=int(transaction_id)))
+  def InsertTransactionPhoto(self, time_interval, client_check_image_id, transaction_id):
+    Sessions.add(TransactionData(time_interval=time_interval, client_check_image_id=client_check_image_id, transaction_id=transaction_id))
     Sessions.commit()
     Sessions.close()
-    logger.debug(f"User id [{user_id}] | Update the table transaction_photo {value}")
 
   def ValueUpdate(self, value, id):
     transaction_id = TransactionExchange().TransactionLastId(id)

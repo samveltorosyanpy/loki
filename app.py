@@ -638,7 +638,7 @@ if __name__ == '__main__':
 # if __name__ == '__main__':
 #     bot.delete_webhook()
 #     start_bot(bot)
-
+#
 #     bot.set_my_commands([
 #         telebot.types.BotCommand("/start", "start the bot"),
 #         telebot.types.BotCommand("/language", "choose a language"),

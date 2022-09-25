@@ -11,7 +11,10 @@ class Translate(Base):
     english = Column(String(250), nullable=True)
 
     def ShowText(self, user_id, text_id):
-        language = Sessions.query(TelegramUser.language).filter(TelegramUser.id == user_id)[0][0]
+        try:
+            language = Sessions.query(TelegramUser.language).filter(TelegramUser.id == user_id)[0][0]
+        except IndexError as ex:
+            language = None
         if language == "armenian":
             text = Sessions.query(Translate.armenian).filter(Translate.id == text_id)[0][0]
         elif language == "russian":
