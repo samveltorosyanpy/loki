@@ -1,4 +1,4 @@
-import requests
+import requests as req1
 
 arm_price = 400
 commission = 5
@@ -17,7 +17,7 @@ class ClassApis():
                 "tsyms": "USD",
                 "api_key": "aa735b3e07ea3c717e7b6f2302221dec10089e3720e929d65a4bcc8695dca3d9",
             }
-            req = requests.get(url=self.API, params=params)
+            req = req1.get(url=self.API, params=params)
             crypto_to_usd.append(req.json()["USD"])
 
         return crypto_to_usd
@@ -32,7 +32,7 @@ class ClassApis():
                 "api_key": "aa735b3e07ea3c717e7b6f2302221dec10089e3720e929d65a4bcc8695dca3d9",
             }
 
-            req = requests.get(url=self.API, params=params)
+            req = req1.get(url=self.API, params=params)
 
             price = req.json()
             print(price)
