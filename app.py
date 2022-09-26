@@ -622,6 +622,7 @@ server = Flask(__name__)
 
 @bot.message_handler(commands=['start'])
 def start(message):
+    print(TOKEN)
     bot.reply_to(message.chat.id, 'Hello, ' + message.from_user.first_name)
 
 
