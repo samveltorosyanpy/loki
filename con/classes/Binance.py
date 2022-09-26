@@ -1,7 +1,7 @@
 # from binance.spot import Spot
 from binance.exceptions import BinanceAPIException
 from binance.client import Client
-from run_test_loki.con.classes.conf.configuration import *
+from con.classes.conf.configuration import *
 import requests
 
 client = Client(api_key, api_secret)

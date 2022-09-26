@@ -1,5 +1,5 @@
-from run_test_loki.con.classes.conf.configuration import types
-from run_test_loki.con.classes.SQL.StartingPostgres import *
+from con.classes.conf.configuration import types
+from con.classes.SQL.StartingPostgres import *
 
 
 class ButtonsClass():
