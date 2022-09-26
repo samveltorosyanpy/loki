@@ -2,7 +2,7 @@ import os
 import telebot
 from telebot import types
 from sqlalchemy import or_
-from con.classes.SQL.StartingPostgres import *
+from run_test_loki.con.classes.SQL.StartingPostgres import *
 
 static_status = [None, "start_transaction", "waiting_user_carncy", "waiting_user_amount", "waiting_user_wallet_buy", "waiting_user_wallet_sell" , "success"]
 

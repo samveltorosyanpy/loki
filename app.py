@@ -2,13 +2,16 @@ import time
 from datetime import datetime
 from loguru import logger
 from flask import Flask, request
-from con.classes.Binance import BnanceApi
-from con.classes.conf.configuration import *
-from con.classes.ApiRequests import ClassApis
-from con.classes.SQL.StartingPostgres import *
-from con.classes.Utilites.Utils import UtilsApp
-from con.classes.BigTextsClass import BuySellClass
+from run_test_loki.con.classes.Binance import BnanceApi
+from run_test_loki.con.classes.conf.configuration import *
+from run_test_loki.con.classes.ApiRequests import ClassApis
+from run_test_loki.con.classes.SQL.StartingPostgres import *
+from run_test_loki.con.classes.Utilites.Utils import UtilsApp
+from run_test_loki.con.classes.BigTextsClass import BuySellClass
 from run_test_loki.con.classes.buttons.button import ButtonsClass
+from run_test_loki.con.classes.SQL.tables.TranslateTable import Translate
+
+# from run_test_loki.con.classes.SQL.tables.Transactions import TransactionExchange
 
 bot = telebot.TeleBot(TOKEN)
 server = Flask(__name__)

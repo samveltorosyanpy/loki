@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
-from con.classes.SQL.tables.conf.config import Base, Session
-from con.classes.SQL.tables.Users import TelegramUser
+from run_test_loki.con.classes.SQL.tables.conf.config import Base, Session
+from run_test_loki.con.classes.SQL.tables.Users import TelegramUser
 from loguru import logger
 
 Sessions = Session()

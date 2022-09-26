@@ -1,9 +1,9 @@
 import time
 import telebot
 from datetime import datetime, timedelta
-from con.classes.conf.configuration import *
-from con.classes.SQL.StartingPostgres import *
-from con.classes.Utilites.Utils import UtilsApp
+from run_test_loki.con.classes.conf.configuration import *
+from run_test_loki.con.classes.SQL.StartingPostgres import *
+from run_test_loki.con.classes.Utilites.Utils import UtilsApp
 
 bot = telebot.TeleBot(TOKEN)
 

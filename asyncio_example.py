@@ -2,8 +2,8 @@
 # import schedule
 # from time import sleep
 # from datetime import datetime, timedelta
-# from con.classes.conf.configuration import *
-# from con.classes.SQL.StartingPostgres import *
+# from run_test_loki.con.classes.conf.configuration import *
+# from run_test_loki.con.classes.SQL.StartingPostgres import *
 
 # bot = telebot.TeleBot(TOKEN)
 # def schedule_checker():

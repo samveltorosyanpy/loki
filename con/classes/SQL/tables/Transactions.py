@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, BOOLEAN
-from con.classes.SQL.tables.conf.config import Base, Session
+from run_test_loki.con.classes.SQL.tables.conf.config import Base, Session
 from loguru import logger
 
 Sessions = Session()

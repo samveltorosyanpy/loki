@@ -1,9 +1,9 @@
 import time
 from telebot import types
 from datetime import datetime
-from con.classes.Binance import BnanceApi
-from con.classes.conf.configuration import *
-from con.classes.buttons.button import ButtonsClass
+from run_test_loki.con.classes.Binance import BnanceApi
+from run_test_loki.con.classes.conf.configuration import *
+from run_test_loki.con.classes.buttons.button import ButtonsClass
 
 
 

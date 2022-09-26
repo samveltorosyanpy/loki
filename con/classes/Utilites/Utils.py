@@ -1,8 +1,8 @@
 import time
 import random
-from con.classes.BigTextsClass import *
-from con.classes.SQL.StartingPostgres import *
-from con.classes.buttons.button import ButtonsClass
+from run_test_loki.con.classes.BigTextsClass import *
+from run_test_loki.con.classes.SQL.StartingPostgres import *
+from run_test_loki.con.classes.buttons.button import ButtonsClass
 
 class UtilsApp():
     def __init__(self, bot, message):
