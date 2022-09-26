@@ -10,7 +10,7 @@ cryptocoin_array = ['BTC', 'XRP', 'USDT', 'DASH']
 
 curacy_array = ["to_usdt", "to_xrp", "to_btc", "to_dash", "to_amd", "to_usd"]
 
-TOKEN = os.environ['TOKEN']
+TOKEN = os.environ.get('TOKEN')
 
 limit_time_send_photo = Sessions.query(ChangeInformation.limit_time_send_photo).filter(
     ChangeInformation.id == 1)[0][0]  # minutes
@@ -24,9 +24,9 @@ owner_id = Sessions.query(ChangeInformation.owner_id).filter(ChangeInformation.i
 
 arm_price = Sessions.query(ChangeInformation.amd_price).filter(ChangeInformation.id == 1)[0][0]
 
-api_key = os.environ['API_KEY']
+api_key = os.environ.get('API_KEY')
 
-api_secret = os.environ['API_SECRET']
+api_secret = os.environ.get('API_SECRET')
 
 min_limits_amount_exchange = {
     "AMD": float(
