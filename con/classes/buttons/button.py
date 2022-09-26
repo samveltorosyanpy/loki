@@ -1,4 +1,4 @@
-from con.classes.conf.configuration import *
+from con.classes.conf.configuration import types
 from con.classes.SQL.StartingPostgres import *
 
 

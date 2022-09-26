@@ -8,7 +8,7 @@ from con.classes.ApiRequests import ClassApis
 from con.classes.SQL.StartingPostgres import *
 from con.classes.Utilites.Utils import UtilsApp
 from con.classes.BigTextsClass import BuySellClass
-from con.classes.buttons.button import ButtonsClass
+from run_test_loki.con.classes.buttons.button import ButtonsClass
 
 bot = telebot.TeleBot(TOKEN)
 server = Flask(__name__)
@@ -39,6 +39,7 @@ def choose_transaction(message):
 
     if message.text == "/admin" and message.chat.id == owner_id:
         pass
+
 
 @bot.callback_query_handler(func=lambda call: True)
 def query_handler(call):

@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from conf.config import Base, Session
+from con.classes.SQL.tables.conf.config import Base, Session
 from loguru import logger
 
 Sessions = Session()

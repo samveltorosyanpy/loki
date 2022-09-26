@@ -1,9 +1,9 @@
-from tables.TransactionData import TransactionData
-from tables.conf.config import Base, engine, Session
-from tables.Transactions import TransactionExchange
-from tables.AdminInfo import ChangeInformation
-from tables.TranslateTable import Translate
-from tables.Users import TelegramUser
+from  con.classes.SQL.tables.TransactionData import TransactionData
+from  con.classes.SQL.tables.conf.config import Base, engine, Session
+from  con.classes.SQL.tables.Transactions import TransactionExchange
+from  con.classes.SQL.tables.AdminInfo import ChangeInformation
+from  con.classes.SQL.tables.TranslateTable import Translate
+from  con.classes.SQL.tables.Users import TelegramUser
 
 Base.metadata.create_all(engine)
 

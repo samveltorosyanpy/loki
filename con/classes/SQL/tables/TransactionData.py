@@ -1,4 +1,6 @@
-from con.classes.SQL.tables.Transactions import *
+from sqlalchemy import Column, Integer, String, ForeignKey
+from con.classes.SQL.tables.conf.config import Base, Session
+from con.classes.SQL.tables.Transactions import TransactionExchange
 from loguru import logger
 
 Sessions = Session()
