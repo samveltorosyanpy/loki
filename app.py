@@ -16,12 +16,6 @@ from con.classes.SQL.tables.TranslateTable import Translate
 bot = telebot.TeleBot(TOKEN)
 server = Flask(__name__)
 
-
-@bot.message_handler(content_types=["text"])
-def testing(message):
-    bot.send_message(message.chat.id, "Hello")
-
-
 @bot.message_handler(commands=['start', 'clear', 'language', 'admin'])
 def choose_transaction(message):
     if message.text == "/clear":
