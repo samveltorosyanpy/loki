@@ -621,7 +621,6 @@ from con.classes.Utilites.Utils import UtilsApp
 from con.classes.BigTextsClass import BuySellClass
 from con.classes.buttons.button import ButtonsClass
 
-TOKEN =
 bot = telebot.TeleBot(TOKEN)
 server = Flask(__name__)
 
