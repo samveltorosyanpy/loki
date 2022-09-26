@@ -17,6 +17,11 @@ bot = telebot.TeleBot(TOKEN)
 server = Flask(__name__)
 
 
+@bot.message_handler(content_types=["text"])
+def testing(message):
+    bot.send_message(message.chat.id, "Hello")
+
+
 @bot.message_handler(commands=['start', 'clear', 'language', 'admin'])
 def choose_transaction(message):
     if message.text == "/clear":
@@ -629,7 +634,6 @@ def webhook():
 
 
 if __name__ == "__main__":
-    print(TOKEN)
     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
 # if __name__ == '__main__':
