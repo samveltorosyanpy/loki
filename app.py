@@ -615,8 +615,7 @@ from flask import Flask, request
 
 import telebot
 
-TOKEN = '5429991269:AAFcaYyt6aB9wNoDQKvtyOXIh2B5ud05XOs'
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot(os.environ.get('TOKEN'))
 server = Flask(__name__)
 
 
