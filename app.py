@@ -422,6 +422,7 @@ def changing_real_time(message):
 
                     elif type_transaction == "Sell":
                         owner_wallet = BnanceApi(cryptocoin).address
+                        print(owner_wallet)
 
                         Transaction.ValueUpdate(
                             value={"state_transaction": "waiting_user_send_id", "owner_wallet": owner_wallet},
