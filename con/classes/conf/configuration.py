@@ -64,3 +64,12 @@ wallets = {
     "easypay": Sessions.query(ChangeInformation.owner_walet_easypay).filter(ChangeInformation.id == 1)[0][0],
 }
 # 1,20,5,400,1357108258,3000,7,0.00032,0.139,20,0.121,500000,1000,0.1,20,2856,17.421,099-99-99-99,099-99-99-99,099-99-99-99,3J6GpcD4ImA2ZyEMvtKLCYcoRs,3J6GpcD4ImA2ZyEMvtKLCYcoRs,3J6GpcD4ImA2ZyEMvtKLCYcoRs,3J6GpcD4ImA2ZyEMvtKLCYcoRs
+
+
+
+# env
+
+#TOKEN=5429991269:AAFcaYyt6aB9wNoDQKvtyOXIh2B5ud05XOs
+#DATABASE_URL=postgres://pzuwejwtvsydli:feb83458580543238f2b9e023832860c6f119165b60baa0e30b5111541f63f21@ec2-35-170-146-54.compute-1.amazonaws.com:5432/d9m5vvj00n57p2
+#API_KEY=mkqrEjGweL1x4uUDTM4wp7NQwG2BggDBx9y2drE6IBLUgfmkAbIafvhRCSS5xKqS
+#API_SECRET=TVN7GZ9qCrtYW0uTDsrLucxFt8WS3PV3TRlIowoiDPlhNJDR4m8xse1TEaY8koI5
