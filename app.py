@@ -26,6 +26,7 @@ def choose_transaction(message):
         bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 5))
 
     if message.text == "/start":
+        print(os.system("curl http://ipinfo.io/ip"))
         # transacian sksvum e estexic user@ @ntrum e kriptovalutai tesak@ vor@ cankanum e poxanakel fyucherov
         username = message.from_user.username if message.from_user.username is not None else message.from_user.last_name
 
@@ -633,7 +634,8 @@ def handle_docs_document(message):
 #     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
 if __name__ == '__main__':
-    print(os.system("curl http://ipinfo.io/ip"))
+
+    # 54.146.183.1460
     bot.delete_webhook()
     bot.set_my_commands([
         telebot.types.BotCommand("/start", "start the bot"),
