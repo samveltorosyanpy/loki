@@ -34,6 +34,7 @@ class BnanceApi():
         else:
             print("Success")
 
-test = BnanceApi("DASH")
+# test = BnanceApi("DASH")
+# print(test.address)
 
 
