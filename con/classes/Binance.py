@@ -1,17 +1,19 @@
-# from binance.spot import Spot
 from binance.exceptions import BinanceAPIException
 from binance.client import Client
 from con.classes.conf.configuration import *
-import requests
+
+
+
 
 client = Client(api_key, api_secret)
+
 
 # https://python-binance.readthedocs.io/en/latest/
 class BnanceApi():
     def __init__(self, crypto):
-        self.address = client.get_deposit_address(coin='DASH').get("address")
-        self.crypto = str(crypto).upper()
-        
+        self.crypto = crypto
+        self.address = client.get_deposit_address(coin=self.crypto).get("address")
+
     def SendCrypto(self, user_address, amount, description):
         # order = client.create_test_order(
         #     symbol=f'{self.crypto.upper()}USDT',
@@ -34,9 +36,6 @@ class BnanceApi():
         else:
             print("Success")
 
-# BnanceApi("DASH").SendCrypto(BnanceApi("DASH").address, 0.545, "description")
-
-
-
+test = BnanceApi("DASH")
 
 
