@@ -9,8 +9,8 @@ client = Client(api_key, api_secret)
 class BnanceApi():
     def __init__(self, crypto):
         self.crypto = crypto
-        self.address = "sdasdasdasdasdsadas"
-        # self.address = client.get_deposit_address(coin=self.crypto).get("address")
+        # self.address = "sdasdasdasdasdsadas"
+        self.address = client.get_deposit_address(coin=self.crypto).get("address")
 
     def SendCrypto(self, user_address, amount, description):
         # order = client.create_test_order(
