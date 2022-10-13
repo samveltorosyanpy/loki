@@ -633,7 +633,7 @@ def handle_docs_document(message):
 #     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
 if __name__ == '__main__':
-
+    print(os.system("dig +short myip.opendns.com @resolver1.opendns.com"))
     bot.delete_webhook()
     bot.set_my_commands([
         telebot.types.BotCommand("/start", "start the bot"),
