@@ -16,6 +16,7 @@ from con.classes.SQL.tables.TranslateTable import Translate
 bot = telebot.TeleBot(TOKEN)
 server = Flask(__name__)
 
+
 @bot.message_handler(commands=['start', 'clear', 'language', 'admin'])
 def choose_transaction(message):
     if message.text == "/clear":
@@ -259,13 +260,15 @@ def query_handler(call):
                 TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
                     user_id))[0][0]
 
-            description = f"transaction_id = {TransactionExchange().TransactionLastId(user_id)}, user_id={user_id}"
+            description = f"transaction_id  &{TransactionExchange().TransactionLastId(user_id)}  user_id  &{user_id}"
 
-            SendCrypto = BnanceApi(crypto=str(cryptocoin).lower())
-            trx_id = SendCrypto.SendCrypto(user_address=str(user_wallet), amount=float(amount_crypto_pr),
-                                           description=description)
+            SendCryptoClass = BnanceApi(bot=bot, message=call.message)
 
-            TransactionData().ValueUpdate(value={"service_check_index": trx_id}, id=user_id)
+            trx_id = SendCryptoClass.SendCrypto(crypto=str(cryptocoin).lower(), user_address=str(user_wallet),
+                                           amount=float(amount_crypto_pr),
+                                           description=description, user_id=user_id)
+
+            # TransactionData().ValueUpdate(value={"service_check_index": trx_id}, id=user_id)
             TransactionExchange().ValueUpdate(value={'state_transaction': "success"}, id=user_id)
 
             ch = BuySellClass(user_id, type_transaction, bot)
@@ -337,7 +340,7 @@ def changing_real_time(message):
 
         try:
 
-            user_id = int(str(message.text).split('|')[1])
+            user_id = int(str(message.text).split('|')[0])
 
             state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
                 TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
@@ -347,7 +350,7 @@ def changing_real_time(message):
                     user_id))[0][0]
 
             if state_transaction == "waiting_service_check_number" and type_transaction == "Sell":
-                trx_id = str(message.text).split("|")[0]
+                trx_id = str(message.text).split("|")[1]
 
                 TransactionData().ValueUpdate(value={"service_check_index": trx_id},
                                               id=int(user_id))
@@ -355,6 +358,10 @@ def changing_real_time(message):
 
                 ch = BuySellClass(user_id, type_transaction, bot)
                 bot.send_message(user_id, text=ch.Cack())
+            elif state_transaction == "waiting_service_check_number" and type_transaction == "Buy":
+                trx_id = str(message.text).split("|")[1]
+
+                TransactionData().ValueUpdate(value={"service_check_index": trx_id}, id=int(user_id))
 
         except IndexError as ex:
             pass
@@ -388,7 +395,6 @@ def changing_real_time(message):
             while slt == True:
 
                 amount_exchange = float(message.text)
-                print(message.text)
 
                 while amount_exchange >= min_limits_amount_exchange[curacy] and amount_exchange <= \
                         max_limits_amount_exchange[curacy]:
@@ -422,8 +428,7 @@ def changing_real_time(message):
                                          reply_markup=ButtonsClass().MarkupChoosWallet())
 
                     elif type_transaction == "Sell":
-                        owner_wallet = BnanceApi(cryptocoin).address
-                        print(owner_wallet)
+                        owner_wallet = BnanceApi(bot=bot, message=message).address
 
                         Transaction.ValueUpdate(
                             value={"state_transaction": "waiting_user_send_id", "owner_wallet": owner_wallet},
@@ -466,19 +471,29 @@ def changing_real_time(message):
                 value={'user_wallet': message.text, "state_transaction": "waiting_service_check_number"},
                 id=message.chat.id)
 
+            trans_id = TransactionExchange().TransactionLastId(message.chat.id)
             admin_id = Sessions.query(TransactionExchange.admin_id).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+                TransactionExchange.transaction_id == trans_id)[0][0]
             user_wallet = Sessions.query(TransactionExchange.user_wallet).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+                TransactionExchange.transaction_id == trans_id)[0][0]
             armenian_wallet = Sessions.query(TransactionExchange.armenian_wallet).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+                TransactionExchange.transaction_id == trans_id)[0][0]
             cryptocoin = Sessions.query(TransactionExchange.cryptocoin).filter(
-                TransactionExchange.transaction_id == Transaction.TransactionLastId(message.chat.id))[0][0]
+                TransactionExchange.transaction_id == trans_id)[0][0]
+            amount = Sessions.query(TransactionExchange.amount_crypto_pr).filter(
+                TransactionExchange.transaction_id == trans_id)[0][0]
+            amd_amount_pr = Sessions.query(TransactionExchange.amd_amount_pr).filter(
+                TransactionExchange.transaction_id == trans_id)[0][0]
+            curacy = Sessions.query(TransactionExchange.curacy).filter(
+                TransactionExchange.transaction_id == trans_id)[0][0]
 
             if type_transaction == "Buy":
 
-                bot.send_message(admin_id, text=f"|{message.chat.id}")
-                bot.send_message(admin_id, text=f"{cryptocoin} {message.text}")
+                bot.send_message(admin_id, text=f"""
+User id  &`{message.chat.id}`    &`{trans_id}`
+Crypto   Amount   {cryptocoin}   `{amount}`
+Address      `{message.text}`
+                        """, parse_mode='MarkdownV2')
 
                 bot.send_message(admin_id, text=Translate().ShowText(admin_id, 35),
                                  reply_markup=ButtonsClass().MarkupSend(message))
@@ -487,8 +502,9 @@ def changing_real_time(message):
 
                 bot.send_message(admin_id, text=f"|{message.chat.id}")
                 bot.send_message(admin_id, text=f"""
-    {Translate().ShowText(admin_id, 36)} {user_wallet} {armenian_wallet}
-    {Translate().ShowText(admin_id, 35)}
+{Translate().ShowText(admin_id, 36)} {user_wallet} {armenian_wallet}
+{amd_amount_pr} {curacy}
+{Translate().ShowText(admin_id, 35)}
     """,
                                  )
 
@@ -614,33 +630,33 @@ def handle_docs_document(message):
         bot.send_photo(admin_id, photo, reply_markup=ButtonsClass().MarkupConfirm(message))
 
 
-# @server.route('/' + TOKEN, methods=['POST'])
-# def getMessage():
-#     json_string = request.get_data().decode('utf-8')
-#     update = telebot.types.Update.de_json(json_string)
-#     bot.process_new_updates([update])
-#     return "!", 200
-#
-#
-# @server.route("/")
-# def webhook():
-#     bot.remove_webhook()
-#     bot.set_webhook(url='https://loki.samveltorosyan90.workers.dev/' + str(TOKEN))
-#     return "!", 200
-#
-#
-# if __name__ == "__main__":
-#     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+@server.route('/' + TOKEN, methods=['POST'])
+def getMessage():
+    json_string = request.get_data().decode('utf-8')
+    update = telebot.types.Update.de_json(json_string)
+    bot.process_new_updates([update])
+    return "!", 200
 
-if __name__ == '__main__':
-    print(os.system("dig +short myip.opendns.com @resolver1.opendns.com"))
-    bot.delete_webhook()
-    bot.set_my_commands([
-        telebot.types.BotCommand("/start", "start the bot"),
-        telebot.types.BotCommand("/language", "choose a language"),
-        telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
-    ])
-    bot.polling(none_stop=True, interval=0)
+
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url='https://loki.samveltorosyan90.workers.dev/' + str(TOKEN))
+    return "!", 200
+
+
+if __name__ == "__main__":
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+
+# if __name__ == '__main__':
+#     # print(os.system("dig +short myip.opendns.com @resolver1.opendns.com"))
+#     bot.delete_webhook()
+#     bot.set_my_commands([
+#         telebot.types.BotCommand("/start", "start the bot"),
+#         telebot.types.BotCommand("/language", "choose a language"),
+#         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
+#     ])
+#     bot.polling(none_stop=True, interval=0)
 
 # db-ic select linox informacian texapoxvi arandin config faili mech
 # serveri anjatvel mianaluc heto transaqcian petqa sharunakvi
