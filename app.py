@@ -27,6 +27,7 @@ def choose_transaction(message):
         bot.send_message(message.chat.id, text=Translate().ShowText(message.chat.id, 5))
 
     if message.text == "/start":
+        bot.send_message(message.chat.id, "s")
         # transacian sksvum e estexic user@ @ntrum e kriptovalutai tesak@ vor@ cankanum e poxanakel fyucherov
         username = message.from_user.username if message.from_user.username is not None else message.from_user.last_name
 
