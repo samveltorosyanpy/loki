@@ -16,4 +16,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.AZURE_CREDENTIALS }}
         port: ${{ secrets.PORT }}
-        script: whoami
+        script: deploy
