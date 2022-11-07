@@ -405,10 +405,10 @@ def changing_real_time(message):
                         max_limits_amount_exchange[curacy]:
 
                     amount_user = message.text
-                    # Exchange.crypto_price_user(message=message)
+                    #
 
                     Exchange = ClassApis([cryptocoin])
-                    amd_amount_pr, amount_crypto_pr, amount_crypto = 1, 1, 1
+                    amd_amount_pr, amount_crypto_pr, amount_crypto = Exchange.crypto_price_user(message=message)
 
                     type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
                         TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
