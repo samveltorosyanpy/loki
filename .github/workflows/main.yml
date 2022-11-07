@@ -1,0 +1,19 @@
+
+on: [push]
+
+name: Create Custom VM Image
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2    
+
+    - name: Login via Az module
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+
+    - name: deploy
+      run: deploy
