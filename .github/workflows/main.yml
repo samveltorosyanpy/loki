@@ -16,4 +16,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.AZURE_CREDENTIALS }}
         port: ${{ secrets.PORT }}
-        script: deploy
+        script: sh -c "cd ~/current/loki; git add .; git stash; git pull origin master; echo 'restarting bot service'; sudo systemctl restart bot.service; sudo systemctl status bot.service;"
