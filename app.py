@@ -79,7 +79,6 @@ def query_handler(call):
         else:
             Chack.ChackState(state_transaction)
 
-
     elif str(call.data).split("|")[0] == "Buy" or str(call.data).split("|")[0] == "Sell":
 
         state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
@@ -94,6 +93,8 @@ def query_handler(call):
 
             bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 41),
                              reply_markup=ButtonsClass().MarkupReadAmount(cryptocoin))
+
+            # bot.send_message(call.message.chat.id, text=Translate().ShowText(call.message.chat.id, 41))
         else:
             Chack.ChackState(state_transaction)
 
@@ -107,53 +108,56 @@ def query_handler(call):
             Transaction.ValueUpdate(value={"state_transaction": "waiting_user_amount",
                                            "curacy": str(call.data).split('_')[1].upper()},
                                     id=call.message.chat.id)
+# pr_read
+#             bot.send_message(chat_id=call.message.chat.id, text=f"""
+# {Translate().ShowText(call.message.chat.id, 11)}
+#
+# {Translate().ShowText(call.message.chat.id, 53)}
+# """,
+#                              reply_markup=ButtonsClass().MarkupRead(Translate().ShowText(call.message.chat.id, 50)), )
 
-            bot.send_message(chat_id=call.message.chat.id, text=f"""
-{Translate().ShowText(call.message.chat.id, 11)}
-
-{Translate().ShowText(call.message.chat.id, 53)}
-""",
-                             reply_markup=ButtonsClass().MarkupRead(Translate().ShowText(call.message.chat.id, 50)), )
+            bot.send_message(chat_id=call.message.chat.id, text=f"{Translate().ShowText(call.message.chat.id, 11)}")
 
         else:
             Chack.ChackState(state_transaction)
 
-    elif call.data == "read_rp":
-
-        state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
-            TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
-
-        pr_read = Sessions.query(TransactionExchange.pr_read).filter(
-            TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[
-            0][0]
-
-        if state_transaction == "waiting_user_amount":
-
-            if pr_read is True:
-                Burron_text = Translate().ShowText(call.message.chat.id, 50)
-                bool_pr = False
-
-                pr_text = f"""
-{Translate().ShowText(call.message.chat.id, 11)}
-
-{Translate().ShowText(call.message.chat.id, 53)}
-                    """
-
-            if pr_read is False:
-                Burron_text = Translate().ShowText(call.message.chat.id, 49)
-                bool_pr = True
-                pr_text = f"""
-{Translate().ShowText(call.message.chat.id, 11)}
-
-{Translate().ShowText(call.message.chat.id, 54)}
-                    """
-
-            Transaction.ValueUpdate(value={"pr_read": bool_pr}, id=call.message.chat.id)
-
-            bot.edit_message_text(text=pr_text, message_id=call.message.message_id, chat_id=call.message.chat.id,
-                                  reply_markup=ButtonsClass().MarkupRead(Burron_text))
-        else:
-            Chack.ChackState(state_transaction)
+# pr_read
+#     elif call.data == "read_rp":
+#
+#         state_transaction = Sessions.query(TransactionExchange.state_transaction).filter(
+#             TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[0][0]
+#
+#         pr_read = Sessions.query(TransactionExchange.pr_read).filter(
+#             TransactionExchange.transaction_id == Transaction.TransactionLastId(call.message.chat.id))[
+#             0][0]
+#
+#         if state_transaction == "waiting_user_amount":
+#
+#             if pr_read is True:
+#                 Burron_text = Translate().ShowText(call.message.chat.id, 50)
+#                 bool_pr = False
+#
+#                 pr_text = f"""
+# {Translate().ShowText(call.message.chat.id, 11)}
+#
+# {Translate().ShowText(call.message.chat.id, 53)}
+#                     """
+#
+#             if pr_read is False:
+#                 Burron_text = Translate().ShowText(call.message.chat.id, 49)
+#                 bool_pr = True
+#                 pr_text = f"""
+# {Translate().ShowText(call.message.chat.id, 11)}
+#
+# {Translate().ShowText(call.message.chat.id, 54)}
+#                     """
+#
+#             Transaction.ValueUpdate(value={"pr_read": bool_pr}, id=call.message.chat.id)
+#
+#             bot.edit_message_text(text=pr_text, message_id=call.message.message_id, chat_id=call.message.chat.id,
+#                                   reply_markup=ButtonsClass().MarkupRead(Burron_text))
+#         else:
+#             Chack.ChackState(state_transaction)
 
     elif call.data == "Idram" or call.data == "Telcell" or call.data == "Easypay":
 
@@ -400,12 +404,10 @@ def changing_real_time(message):
                         max_limits_amount_exchange[curacy]:
 
                     amount_user = message.text
+                    # Exchange.crypto_price_user(message=message)
 
                     Exchange = ClassApis([cryptocoin])
-                    amd_amount_pr, amount_crypto_pr, amount_crypto = Exchange.crypto_price_user(curacy=curacy,
-                                                                                                amount_user=amount_user,
-                                                                                                pr_read=pr_read,
-                                                                                                type=type_transaction)
+                    amd_amount_pr, amount_crypto_pr, amount_crypto = 1, 1, 1
 
                     type_transaction = Sessions.query(TransactionExchange.type_transaction).filter(
                         TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
@@ -630,33 +632,33 @@ def handle_docs_document(message):
         bot.send_photo(admin_id, photo, reply_markup=ButtonsClass().MarkupConfirm(message))
 
 
-@server.route('/' + TOKEN, methods=['POST'])
-def getMessage():
-    json_string = request.get_data().decode('utf-8')
-    update = telebot.types.Update.de_json(json_string)
-    bot.process_new_updates([update])
-    return "!", 200
+# @server.route('/' + TOKEN, methods=['POST'])
+# def getMessage():
+#     json_string = request.get_data().decode('utf-8')
+#     update = telebot.types.Update.de_json(json_string)
+#     bot.process_new_updates([update])
+#     return "!", 200
+#
+#
+# @server.route("/")
+# def webhook():
+#     bot.remove_webhook()
+#     bot.set_webhook(url='https://loki.samveltorosyan90.workers.dev/' + str(TOKEN))
+#     return "!", 200
+#
+#
+# if __name__ == "__main__":
+#     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
-
-@server.route("/")
-def webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url='https://loki.samveltorosyan90.workers.dev/' + str(TOKEN))
-    return "!", 200
-
-
-if __name__ == "__main__":
-    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
-
-# if __name__ == '__main__':
-#     # print(os.system("dig +short myip.opendns.com @resolver1.opendns.com"))
-#     bot.delete_webhook()
-#     bot.set_my_commands([
-#         telebot.types.BotCommand("/start", "start the bot"),
-#         telebot.types.BotCommand("/language", "choose a language"),
-#         telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
-#     ])
-#     bot.polling(none_stop=True, interval=0)
+if __name__ == '__main__':
+    # print(os.system("dig +short myip.opendns.com @resolver1.opendns.com"))
+    bot.delete_webhook()
+    bot.set_my_commands([
+        telebot.types.BotCommand("/start", "start the bot"),
+        telebot.types.BotCommand("/language", "choose a language"),
+        telebot.types.BotCommand("/clear", "mqrel texekutyun@"),
+    ])
+    bot.polling(none_stop=True, interval=0)
 
 # db-ic select linox informacian texapoxvi arandin config faili mech
 # serveri anjatvel mianaluc heto transaqcian petqa sharunakvi

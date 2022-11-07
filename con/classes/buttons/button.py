@@ -7,7 +7,6 @@ class ButtonsClass():
         pass
 
     def MarkupStart(self, message):
-
         markup = types.InlineKeyboardMarkup(row_width=2)
 
         type_cour1 = types.InlineKeyboardButton(text='❌  BTC', callback_data="btc")
@@ -20,7 +19,6 @@ class ButtonsClass():
         return markup.add(type_cour1, type_cour2, type_cour3, type_cour4, type_cour5)
 
     def MarkupLanguage(self):
-
         markup = types.InlineKeyboardMarkup(row_width=1)
 
         type_language1 = types.InlineKeyboardButton(text='🇦🇲 Հայերեն', callback_data="armenian_language")
@@ -40,7 +38,6 @@ class ButtonsClass():
         return markup.add(type_buy, type_sell)
 
     def MarkupReadAmount(self, cryptocoin):
-
         markup = types.InlineKeyboardMarkup(row_width=3)
 
         curacy1 = types.InlineKeyboardButton(text=f"AMD", callback_data=f"to_amd")
@@ -51,7 +48,6 @@ class ButtonsClass():
         return markup.add(curacy1, curacy2, curacy3)
 
     def MarkupChoosWallet(self):
-
         markup = types.InlineKeyboardMarkup(row_width=2)
 
         type_wallet1 = types.InlineKeyboardButton(text='Idram', callback_data="Idram")
@@ -60,8 +56,7 @@ class ButtonsClass():
 
         return markup.add(type_wallet1, type_wallet2, type_wallet3)
 
-    def MarkupConfirm(self,message):
-
+    def MarkupConfirm(self, message):
         markup = types.InlineKeyboardMarkup(row_width=2)
 
         type_cour1 = types.InlineKeyboardButton(text='confirm',
@@ -82,7 +77,6 @@ class ButtonsClass():
         return markup.add(type_cour1, type_cour2)
 
     def MarkupManually(self, user_id):
-
         markup_manually = types.InlineKeyboardMarkup(row_width=1)
 
         manual = types.InlineKeyboardButton(text=Translate().ShowText(user_id, 26),
@@ -90,10 +84,9 @@ class ButtonsClass():
 
         return markup_manually.add(manual)
 
-    def MarkupRead(self, pr_text):
-
-        markup_pr = types.InlineKeyboardMarkup(row_width=1)
-
-        markup1 = types.InlineKeyboardButton(text=pr_text, callback_data="read_rp")
-
-        return markup_pr.add(markup1)
+    # def MarkupRead(self, pr_text):
+    #     markup_pr = types.InlineKeyboardMarkup(row_width=1)
+    #
+    #     markup1 = types.InlineKeyboardButton(text=pr_text, callback_data="read_rp")
+    #
+    #     return markup_pr.add(markup1)

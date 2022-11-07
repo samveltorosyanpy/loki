@@ -1,8 +1,10 @@
 from binance.exceptions import BinanceAPIException
 from binance.client import Client
 from con.classes.conf.configuration import *
+
 #
 client = Client(api_key, api_secret)
+
 
 # https://python-binance.readthedocs.io/en/latest/
 class BnanceApi():
@@ -18,9 +20,8 @@ class BnanceApi():
 
         trans_id = TransactionExchange().TransactionLastId(user_id)
         trx_id = Sessions.query(TransactionExchange.admin_id).filter(
-                TransactionExchange.transaction_id == trans_id)[0][0]
-        return(trx_id)
-
+            TransactionExchange.transaction_id == trans_id)[0][0]
+        return (trx_id)
 
         # order = client.create_test_order(
         #     symbol=f'{self.crypto.upper()}USDT',
@@ -40,4 +41,3 @@ class BnanceApi():
         #     print(ex)
         # else:
         #     print("Success")
-

@@ -11,7 +11,6 @@ limit = limit_time_send_photo
 
 def Starting():
     while True:
-
         transactions = list(Sessions.query(TransactionExchange.user_id, TransactionExchange.state_transaction,
                                            TransactionExchange.datetime).limit(30))
 
