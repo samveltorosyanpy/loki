@@ -2,10 +2,6 @@ import requests as req1
 from con.classes.conf.configuration import *
 from con.classes.SQL.StartingPostgres import *
 
-arm_price = 400
-commission = 5
-
-
 class ClassApis():
     def __init__(self, cryptocoin_array):
         self.API = "https://min-api.cryptocompare.com/data/price"
@@ -26,8 +22,9 @@ class ClassApis():
 
         return crypto_to_usd
 
-    def crypto_price_user(self, id_u):
-        user_id = id_u
+    def crypto_price_user(self, message):
+        user_id = message.chat.id
+        # user_id = message
         amount_user = Sessions.query(TransactionExchange.amount_user).filter(
             TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
                 user_id))[0][0]
@@ -37,6 +34,7 @@ class ClassApis():
         curacy = Sessions.query(TransactionExchange.curacy).filter(
             TransactionExchange.transaction_id == TransactionExchange().TransactionLastId(
                 user_id))[0][0]
+        print("amount_user: ", amount_user, "\n")
 
         params = {
             "fsym": cryptocoin,
@@ -48,18 +46,29 @@ class ClassApis():
 
         price_crypto = req.json().get("USD")
         price_to_amd = price_crypto * arm_price
-        price_to_amd_pr = price_to_amd + price_to_amd * commission / 100
+        print("price_crypto: ", price_crypto, " price_to_amd: ", price_to_amd, "\n")
 
         if curacy == "AMD":
-            p = amount_user / price_to_amd
-            price_crypto_to_amd_pr = p + p * commission / 100
-            return price_to_amd_pr, price_crypto_to_amd_pr, p
+            crypto_price = amount_user / price_to_amd
+            amd_price_pr = amount_user + amount_user * 5 / 100
+            crypto_price_pr = crypto_price + crypto_price * commission / 100
+            return amd_price_pr, crypto_price_pr, crypto_price
 
-cryptocoin_array = ['DASH']
-test = ClassApis(cryptocoin_array)
-# test.all_crypto_price()amount_crypto
-p = test.crypto_price_user(1259401295)
-print(p)
+        elif curacy == "USD":
+            amd_price = amount_user * arm_price
+            amd_price_pr = amd_price + amd_price * 5 / 100
+            crypto_price = amount_user / price_crypto
+            crypto_price_pr = crypto_price + crypto_price * commission / 100
+            return amd_price_pr, crypto_price_pr, crypto_price
 
-# 0.56472984 Dash
-# 0.57024316 Dash
+        else:
+            amd_price = amount_user * price_to_amd
+            amd_price_pr = amd_price + amd_price * 5 / 100
+            crypto_price_pr = amount_user + amount_user * commission / 100
+            return amd_price_pr, crypto_price_pr, amount_user
+
+# cryptocoin_array = ['DASH']
+# test = ClassApis(cryptocoin_array)
+# # test.all_crypto_price()
+# d = test.crypto_price_user(1259401295)
+# print(d)
